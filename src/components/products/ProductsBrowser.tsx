@@ -43,7 +43,9 @@ export function ProductsBrowser() {
   // call the API on every keystroke.
   const debouncedQ = useDebounce(query.q, DEBOUNCE_MS);
   const fetchQuery = useMemo<ListQuery>(
-    () => ({ ...query, q: debouncedQ }),
+    // If the search was cleared (e.g. by picking a category) do not let the
+    // still-debouncing term fire one last stale request.
+    () => ({ ...query, q: query.q === "" ? "" : debouncedQ }),
     [query, debouncedQ],
   );
 
