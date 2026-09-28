@@ -18,11 +18,13 @@ export function ImageGallery({
 
   return (
     <div className="flex flex-col gap-3">
-      <img
-        src={current}
-        alt={title}
-        className="h-72 w-full rounded-xl border border-slate-200 bg-white object-contain sm:h-96"
-      />
+      <div className="glass overflow-hidden rounded-2xl p-2">
+        <img
+          src={current}
+          alt={title}
+          className="h-72 w-full rounded-xl bg-white/60 object-contain sm:h-96"
+        />
+      </div>
       {gallery.length > 1 ? (
         <div className="flex flex-wrap gap-2">
           {gallery.map((image, index) => (
@@ -32,10 +34,10 @@ export function ImageGallery({
               onClick={() => setActive(index)}
               aria-label={`Show image ${index + 1}`}
               className={cn(
-                "h-16 w-16 overflow-hidden rounded-lg border-2 bg-white transition",
+                "h-16 w-16 overflow-hidden rounded-xl border-2 bg-white/60 transition",
                 index === active
-                  ? "border-indigo-600"
-                  : "border-transparent hover:border-slate-300",
+                  ? "border-indigo-500 ring-2 ring-indigo-200"
+                  : "border-white/60 hover:border-white/90",
               )}
             >
               <img

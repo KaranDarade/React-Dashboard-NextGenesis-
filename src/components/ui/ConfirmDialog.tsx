@@ -33,29 +33,29 @@ export function ConfirmDialog({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <button
         type="button"
         aria-label="Close dialog"
         onClick={onCancel}
-        className="absolute inset-0 cursor-default bg-slate-900/50"
+        className="absolute inset-0 cursor-default bg-ink-950/40 backdrop-blur-sm"
       />
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-title"
-        className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+        className="glass-float relative w-full max-w-md rounded-2xl p-6 chart-rise"
       >
-        <h2 id="confirm-title" className="text-lg font-semibold text-slate-900">
+        <h2 id="confirm-title" className="text-lg font-semibold text-ink-900">
           {title}
         </h2>
-        <p className="mt-2 text-sm text-slate-600">{message}</p>
+        <p className="mt-2 text-sm text-ink-500">{message}</p>
         <div className="mt-6 flex justify-end gap-3">
           <button
             type="button"
             onClick={onCancel}
             disabled={busy}
-            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+            className="rounded-xl border border-white/60 bg-white/60 px-4 py-2 text-sm font-medium text-ink-700 transition hover:bg-white/90 disabled:opacity-50"
           >
             {cancelLabel}
           </button>
@@ -63,7 +63,7 @@ export function ConfirmDialog({
             type="button"
             onClick={onConfirm}
             disabled={busy}
-            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 disabled:opacity-50"
+            className="rounded-xl bg-rose-500 px-4 py-2 text-sm font-medium text-white shadow-[0_12px_26px_-14px_rgba(244,63,94,0.9)] transition hover:-translate-y-0.5 hover:bg-rose-600 disabled:opacity-50"
           >
             {busy ? "Deleting..." : confirmLabel}
           </button>

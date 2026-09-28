@@ -6,17 +6,21 @@ import { ProductForm } from "@/components/products/ProductForm";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { NotFoundState } from "@/components/ui/NotFoundState";
 import { Spinner } from "@/components/ui/Spinner";
-import { useCategories } from "@/hooks/useCategories";
 import { useProduct } from "@/hooks/useProduct";
 import { updateProduct } from "@/lib/api/products";
 import { applyPatch, findCreated, isLocalId } from "@/lib/overrides";
+import {
+  useDashboardActivity,
+  useDashboardData,
+} from "@/store/DashboardDataContext";
 import { useProductOverrides } from "@/store/ProductOverridesContext";
 import type { ProductInput } from "@/types/product";
 
 export function EditProductForm({ id }: { id: string }) {
   const router = useRouter();
+  const { categories } = useDashboardData();
   const { state, updateLocal } = useProductOverrides();
-  const { categories } = useCategories();
+  const { log } = useDashboardActivity();
   const remote = useProduct(id);
   const [submitting, setSubmitting] = useState(false);
   const inFlight = useRef(false);
@@ -40,6 +44,11 @@ export function EditProductForm({ id }: { id: string }) {
         await updateProduct(id, input).catch(() => undefined);
       }
       updateLocal(id, input);
+      log({
+        action: "Updated product",
+        detail: input.title,
+        status: "success",
+      });
       router.push(`/products/${id}`);
     } finally {
       inFlight.current = false;
@@ -48,10 +57,12 @@ export function EditProductForm({ id }: { id: string }) {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-5">
       <div>
-        <h1 className="text-xl font-semibold text-slate-900">Edit product</h1>
-        <p className="text-sm text-slate-500">
+        <h2 className="text-lg font-semibold tracking-tight text-ink-900">
+          Edit product
+        </h2>
+        <p className="mt-0.5 text-sm text-ink-500">
           Updates are stored in this browser, not on the API.
         </p>
       </div>

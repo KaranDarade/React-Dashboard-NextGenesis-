@@ -2,26 +2,23 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FilterSort } from "@/components/products/FilterSort";
 import { Pagination } from "@/components/products/Pagination";
 import { ProductGrid } from "@/components/products/ProductGrid";
 import { ProductTable } from "@/components/products/ProductTable";
 import { SearchBar } from "@/components/products/SearchBar";
+import { PlusIcon } from "@/components/shell/icons";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ErrorState } from "@/components/ui/ErrorState";
+import { GlassCard } from "@/components/ui/GlassCard";
 import { Spinner } from "@/components/ui/Spinner";
-import { useCategories } from "@/hooks/useCategories";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useProducts } from "@/hooks/useProducts";
 import { deleteProduct } from "@/lib/api/products";
 import { DEBOUNCE_MS } from "@/lib/constants";
-import {
-  decorateList,
-  filterCreated,
-  isLocalId,
-} from "@/lib/overrides";
+import { decorateList, filterCreated, isLocalId } from "@/lib/overrides";
 import {
   buildListQuery,
   parseListQuery,
@@ -29,6 +26,10 @@ import {
   sortValue,
   type ListQuery,
 } from "@/lib/search-params";
+import {
+  useDashboardActivity,
+  useDashboardData,
+} from "@/store/DashboardDataContext";
 import { useProductOverrides } from "@/store/ProductOverridesContext";
 import type { Product } from "@/types/product";
 
@@ -39,41 +40,33 @@ export function ProductsBrowser() {
 
   const query = useMemo(() => parseListQuery(searchParams), [searchParams]);
 
-  // The URL keeps the live search term, but requests are debounced so we do not
-  // call the API on every keystroke.
   const debouncedQ = useDebounce(query.q, DEBOUNCE_MS);
   const fetchQuery = useMemo<ListQuery>(
-    // If the search was cleared (e.g. by picking a category) do not let the
-    // still-debouncing term fire one last stale request.
     () => ({ ...query, q: query.q === "" ? "" : debouncedQ }),
     [query, debouncedQ],
   );
 
-  const {
-    data,
-    loading,
-    error,
-    retry,
-  } = useProducts(fetchQuery);
+  const { data, loading, error, retry } = useProducts(fetchQuery);
   const {
     categories,
-    loading: categoriesLoading,
-    error: categoriesError,
-    retry: retryCategories,
-  } = useCategories();
+    loading: catalogLoading,
+    error: catalogError,
+    refresh: refreshCatalog,
+  } = useDashboardData();
   const { state, deleteLocal } = useProductOverrides();
+  const { log } = useDashboardActivity();
 
   const [pendingDelete, setPendingDelete] = useState<Product | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const lastLoggedQuery = useRef("");
 
   const replaceQuery = useCallback(
     (patch: Partial<ListQuery>) => {
       const next: ListQuery = { ...query, ...patch };
       const queryString = buildListQuery(next);
-      router.replace(
-        queryString ? `${pathname}?${queryString}` : pathname,
-        { scroll: false },
-      );
+      router.replace(queryString ? `${pathname}?${queryString}` : pathname, {
+        scroll: false,
+      });
     },
     [query, pathname, router],
   );
@@ -98,7 +91,6 @@ export function ProductsBrowser() {
     (data?.total ?? 0) - deletedRemote + localProducts.length,
   );
 
-  // Clamp out-of-range pages (?page=999) once we know the real total.
   useEffect(() => {
     if (loading || error || !data) return;
     if (adjustedTotal <= 0) return;
@@ -106,16 +98,43 @@ export function ProductsBrowser() {
     if (query.page > totalPages) {
       replaceQuery({ page: totalPages });
     }
-  }, [loading, error, data, adjustedTotal, query.page, query.limit, replaceQuery]);
+  }, [
+    loading,
+    error,
+    data,
+    adjustedTotal,
+    query.page,
+    query.limit,
+    replaceQuery,
+  ]);
+
+  useEffect(() => {
+    if (fetchQuery.q && fetchQuery.q !== lastLoggedQuery.current) {
+      lastLoggedQuery.current = fetchQuery.q;
+      log({ action: "Searched products", detail: `"${fetchQuery.q}"` });
+    }
+  }, [fetchQuery.q, log]);
 
   const handleSearch = (value: string) =>
     replaceQuery({ q: value, category: "", page: 1 });
 
-  const handleCategory = (value: string) =>
+  const handleCategory = (value: string) => {
+    if (value) {
+      const name =
+        categories.find((item) => item.slug === value)?.name ?? value;
+      log({ action: "Filtered by category", detail: name });
+    }
     replaceQuery({ category: value, q: "", page: 1 });
+  };
 
   const handleSort = (value: string) => {
     const { sortBy, order } = parseSortValue(value);
+    if (sortBy) {
+      log({
+        action: "Sorted products",
+        detail: `${sortBy} (${order === "desc" ? "high to low" : "low to high"})`,
+      });
+    }
     replaceQuery({ sortBy, order, page: 1 });
   };
 
@@ -127,9 +146,13 @@ export function ProductsBrowser() {
         await deleteProduct(pendingDelete.id);
       }
     } catch {
-      // DummyJSON does not persist deletes anyway - continue with the local
-      // change so the UI stays consistent.
+      // DummyJSON does not persist deletes - keep the local change.
     } finally {
+      log({
+        action: "Deleted product",
+        detail: pendingDelete.title,
+        status: "warning",
+      });
       deleteLocal(pendingDelete.id);
       setPendingDelete(null);
       setDeleting(false);
@@ -140,23 +163,26 @@ export function ProductsBrowser() {
   const showData = !loading && !error && products.length > 0;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-semibold text-slate-900">Products</h1>
-          <p className="text-sm text-slate-500">
-            Browse, search and manage the DummyJSON catalogue.
+        <div className="min-w-0">
+          <h2 className="text-lg font-semibold tracking-tight text-ink-900">
+            Products
+          </h2>
+          <p className="mt-0.5 text-sm text-ink-500">
+            {adjustedTotal.toLocaleString()} products in the catalogue.
           </p>
         </div>
         <Link
           href="/products/new"
-          className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+          className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 px-3.5 py-2 text-sm font-medium text-white shadow-[0_10px_24px_-12px_rgba(79,70,229,0.9)] transition hover:-translate-y-0.5 sm:hidden"
         >
-          Add product
+          <PlusIcon className="h-4 w-4" />
+          Add
         </Link>
       </div>
 
-      <div className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-4">
+      <GlassCard className="flex flex-col gap-4 p-4">
         <SearchBar value={query.q} onChange={handleSearch} loading={loading} />
         <FilterSort
           categories={categories}
@@ -164,17 +190,17 @@ export function ProductsBrowser() {
           onCategoryChange={handleCategory}
           sort={sortValue(query.sortBy, query.order)}
           onSortChange={handleSort}
-          loading={categoriesLoading}
-          error={categoriesError}
-          onRetry={retryCategories}
+          loading={catalogLoading}
+          error={catalogError}
+          onRetry={refreshCatalog}
         />
         {query.q ? (
-          <p className="text-xs text-slate-500">
-            Category filtering is turned off while searching: the API cannot
-            search and filter by category at the same time.
+          <p className="text-xs text-ink-500">
+            Category filtering is paused while searching: the API cannot search
+            and filter by category at the same time.
           </p>
         ) : null}
-      </div>
+      </GlassCard>
 
       {loading ? <Spinner label="Loading products..." /> : null}
       {error ? <ErrorState message={error} onRetry={retry} /> : null}
@@ -195,7 +221,7 @@ export function ProductsBrowser() {
                     page: 1,
                   })
                 }
-                className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                className="rounded-xl border border-white/60 bg-white/60 px-4 py-2 text-sm font-medium text-ink-700 transition hover:bg-white/90"
               >
                 Clear filters
               </button>
@@ -208,13 +234,15 @@ export function ProductsBrowser() {
         <>
           <ProductTable products={products} onDelete={setPendingDelete} />
           <ProductGrid products={products} onDelete={setPendingDelete} />
-          <Pagination
-            page={query.page}
-            limit={query.limit}
-            total={adjustedTotal}
-            onPageChange={(page) => replaceQuery({ page })}
-            onLimitChange={(limit) => replaceQuery({ limit, page: 1 })}
-          />
+          <GlassCard className="p-4">
+            <Pagination
+              page={query.page}
+              limit={query.limit}
+              total={adjustedTotal}
+              onPageChange={(page) => replaceQuery({ page })}
+              onLimitChange={(limit) => replaceQuery({ limit, page: 1 })}
+            />
+          </GlassCard>
         </>
       ) : null}
 

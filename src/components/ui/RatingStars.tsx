@@ -17,10 +17,10 @@ export function RatingStars({
     >
       <span aria-hidden className="text-sm text-amber-500">
         {STARS.slice(0, rounded)}
-        <span className="text-slate-300">{STARS.slice(rounded)}</span>
+        <span className="text-ink-500/25">{STARS.slice(rounded)}</span>
       </span>
       {showValue ? (
-        <span className="text-xs tabular-nums text-slate-500">
+        <span className="text-xs tabular-nums text-ink-500">
           {safeRating.toFixed(1)}
         </span>
       ) : null}

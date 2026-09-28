@@ -3,16 +3,20 @@
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { ProductForm } from "@/components/products/ProductForm";
-import { useCategories } from "@/hooks/useCategories";
 import { createProduct } from "@/lib/api/products";
 import { makeLocalProduct } from "@/lib/overrides";
+import {
+  useDashboardActivity,
+  useDashboardData,
+} from "@/store/DashboardDataContext";
 import { useProductOverrides } from "@/store/ProductOverridesContext";
 import type { ProductInput } from "@/types/product";
 
 export function AddProductForm() {
   const router = useRouter();
-  const { categories } = useCategories();
+  const { categories } = useDashboardData();
   const { addLocal } = useProductOverrides();
+  const { log } = useDashboardActivity();
   const [submitting, setSubmitting] = useState(false);
   const inFlight = useRef(false);
 
@@ -21,11 +25,14 @@ export function AddProductForm() {
     inFlight.current = true;
     setSubmitting(true);
     try {
-      // DummyJSON returns a simulated result but does not persist it, so the
-      // real change lives in the local overrides store.
       await createProduct(input).catch(() => undefined);
       const product = makeLocalProduct(input);
       addLocal(product);
+      log({
+        action: "Created product",
+        detail: input.title,
+        status: "success",
+      });
       router.push(`/products/${product.id}`);
     } finally {
       inFlight.current = false;
@@ -34,10 +41,12 @@ export function AddProductForm() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-5">
       <div>
-        <h1 className="text-xl font-semibold text-slate-900">Add product</h1>
-        <p className="text-sm text-slate-500">
+        <h2 className="text-lg font-semibold tracking-tight text-ink-900">
+          Add product
+        </h2>
+        <p className="mt-0.5 text-sm text-ink-500">
           The new product is stored in this browser, not on the API.
         </p>
       </div>
