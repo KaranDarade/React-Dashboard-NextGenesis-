@@ -5,7 +5,7 @@ A small admin dashboard where a user logs in and manages products from the free
 React, TypeScript, Tailwind CSS and Axios.
 
 - Repository: https://github.com/KaranDarade/React-Dashboard-NextGenesis-
-- Live demo: _added after the first Vercel deploy_
+- Live demo: https://react-dashboard-nextgenesis.vercel.app
 - Demo login: username `emilys`, password `emilyspass`
 
 ## Tech stack
