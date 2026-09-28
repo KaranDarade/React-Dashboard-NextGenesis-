@@ -27,3 +27,9 @@ export const SORT_OPTIONS: SortOption[] = [
 ];
 
 export const SORT_FIELDS: SortField[] = ["title", "price", "rating"];
+
+export const FALLBACK_IMAGE =
+  "data:image/svg+xml;charset=utf-8," +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240"><rect width="240" height="240" fill="#e2e8f0"/><text x="120" y="120" font-family="sans-serif" font-size="16" fill="#64748b" text-anchor="middle" dominant-baseline="middle">No image</text></svg>',
+  );

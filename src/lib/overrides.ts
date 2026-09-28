@@ -25,6 +25,10 @@ export function isDeleted(state: OverridesState, id: Product["id"]): boolean {
   return state.deleted.includes(keyOf(id));
 }
 
+export function isLocalId(id: Product["id"]): boolean {
+  return keyOf(id).startsWith("local-");
+}
+
 export function applyPatch(product: Product, state: OverridesState): Product {
   const patch = state.updates[keyOf(product.id)];
   return patch ? { ...product, ...patch } : product;
