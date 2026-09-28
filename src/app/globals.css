@@ -1,13 +1,34 @@
 @import "tailwindcss";
 
-:root {
-  --background: #f1f5f9;
-  --foreground: #0f172a;
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --radius-xl: 0.875rem;
+  --radius-2xl: 1.125rem;
+  --radius-3xl: 1.5rem;
+
+  --color-ink-950: #0b1020;
+  --color-ink-900: #111834;
+  --color-ink-700: #33405f;
+  --color-ink-500: #5b6b8c;
+
+  --color-accent-500: #6366f1;
+  --color-accent-600: #4f46e5;
+  --color-aqua-500: #06b6d4;
+  --color-violet-500: #8b5cf6;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+:root {
+  --glass-1-bg: rgba(255, 255, 255, 0.55);
+  --glass-2-bg: rgba(255, 255, 255, 0.4);
+  --glass-strong-bg: rgba(255, 255, 255, 0.68);
+  --glass-float-bg: rgba(255, 255, 255, 0.86);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-border-soft: rgba(255, 255, 255, 0.4);
+  --glass-shadow: 0 10px 30px -14px rgba(24, 33, 84, 0.22);
+  --glass-shadow-lg: 0 24px 55px -22px rgba(24, 33, 84, 0.32);
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 * {
@@ -20,10 +41,217 @@ body {
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif;
+  color: var(--color-ink-900);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  background-color: #eef1f8;
+  background-image:
+    radial-gradient(1100px 560px at 8% -12%, rgba(129, 140, 248, 0.32), transparent 60%),
+    radial-gradient(900px 520px at 100% -8%, rgba(34, 211, 238, 0.26), transparent 55%),
+    radial-gradient(1000px 620px at 52% 118%, rgba(167, 139, 250, 0.26), transparent 60%),
+    linear-gradient(180deg, #f4f6fc 0%, #eef1f8 45%, #e9eefb 100%);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: rgba(99, 102, 241, 0.24);
+}
+
+/* ---------- Ambient aurora scene ---------- */
+.aurora-scene {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.5;
+  will-change: transform;
+}
+
+.aurora-blob-1 {
+  width: 42rem;
+  height: 42rem;
+  top: -12rem;
+  left: -10rem;
+  background: radial-gradient(circle at center, rgba(99, 102, 241, 0.55), transparent 70%);
+  animation: drift-a 22s ease-in-out infinite;
+}
+
+.aurora-blob-2 {
+  width: 34rem;
+  height: 34rem;
+  top: -8rem;
+  right: -8rem;
+  background: radial-gradient(circle at center, rgba(34, 211, 238, 0.45), transparent 70%);
+  animation: drift-b 26s ease-in-out infinite;
+}
+
+.aurora-blob-3 {
+  width: 38rem;
+  height: 38rem;
+  bottom: -14rem;
+  left: 32%;
+  background: radial-gradient(circle at center, rgba(168, 85, 247, 0.4), transparent 70%);
+  animation: drift-c 30s ease-in-out infinite;
+}
+
+.aurora-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.35) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(1000px 700px at 50% 20%, black, transparent 75%);
+  opacity: 0.35;
+}
+
+@keyframes drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(4rem, 3rem, 0) scale(1.08); }
+}
+
+@keyframes drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-3rem, 4rem, 0) scale(1.06); }
+}
+
+@keyframes drift-c {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(3rem, -3rem, 0) scale(1.1); }
+}
+
+/* ---------- Glass elevation levels ---------- */
+.glass,
+.glass-2,
+.glass-strong,
+.glass-float {
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
+}
+
+.glass {
+  background: var(--glass-1-bg);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow), var(--glass-highlight);
+}
+
+.glass-2 {
+  background: var(--glass-2-bg);
+  border-color: var(--glass-border-soft);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: 0 6px 18px -12px rgba(24, 33, 84, 0.2), var(--glass-highlight);
+}
+
+.glass-strong {
+  background: var(--glass-strong-bg);
+  border-color: var(--glass-border);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  backdrop-filter: blur(24px) saturate(170%);
+  box-shadow: 0 14px 40px -20px rgba(24, 33, 84, 0.3), var(--glass-highlight);
+}
+
+.glass-float {
+  background: var(--glass-float-bg);
+  border-color: rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  backdrop-filter: blur(32px) saturate(180%);
+  box-shadow: var(--glass-shadow-lg), var(--glass-highlight);
+}
+
+/* subtle hover elevation, opt-in */
+.glass-hover {
+  transition:
+    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.glass-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glass-shadow-lg), var(--glass-highlight);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+/* soft accent ring used on active nav / focus */
+.ring-accent {
+  box-shadow:
+    0 0 0 1px rgba(99, 102, 241, 0.35),
+    0 10px 26px -14px rgba(79, 70, 229, 0.55),
+    var(--glass-highlight);
+}
+
+/* ---------- Skeletons ---------- */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgba(148, 163, 184, 0.2);
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+/* thin, unobtrusive scrollbars for scroll regions */
+.scroll-slim {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 116, 139, 0.35) transparent;
+}
+
+.scroll-slim::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scroll-slim::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.32);
+  border-radius: 9999px;
+}
+
+.scroll-slim::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* chart entrance */
+.chart-rise {
+  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

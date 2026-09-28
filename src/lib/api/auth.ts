@@ -13,7 +13,9 @@ export async function login(
   return data;
 }
 
-export async function fetchCurrentUser(): Promise<AuthUser> {
-  const { data } = await apiClient.get<AuthUser>("/auth/me");
+export async function fetchCurrentUser(
+  signal?: AbortSignal,
+): Promise<AuthUser> {
+  const { data } = await apiClient.get<AuthUser>("/auth/me", { signal });
   return data;
 }

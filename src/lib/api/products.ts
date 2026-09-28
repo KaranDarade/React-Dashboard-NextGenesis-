@@ -124,3 +124,40 @@ export async function deleteProduct(id: string | number): Promise<Product> {
   const { data } = await apiClient.delete<Product>(`/products/${id}`);
   return data;
 }
+
+/** Fields needed to compute every dashboard aggregation in one request. */
+export const CATALOG_SELECT = [
+  "id",
+  "title",
+  "category",
+  "price",
+  "discountPercentage",
+  "rating",
+  "stock",
+  "brand",
+  "availabilityStatus",
+  "thumbnail",
+].join(",");
+
+export interface CatalogSnapshot {
+  products: Product[];
+  categories: Category[];
+}
+
+/**
+ * One bulk request for all products (limit=0) plus the category list. Used by
+ * the dashboard to derive real aggregate metrics without per-card requests.
+ */
+export async function fetchCatalogSnapshot(
+  signal?: AbortSignal,
+): Promise<CatalogSnapshot> {
+  const [productsResponse, categories] = await Promise.all([
+    apiClient.get<ProductsResponse>("/products", {
+      params: { limit: 0, select: CATALOG_SELECT },
+      signal,
+    }),
+    fetchCategories(signal),
+  ]);
+
+  return { products: productsResponse.data.products, categories };
+}

@@ -38,3 +38,23 @@ export function cn(
 ): string {
   return classes.filter(Boolean).join(" ");
 }
+
+export function formatCompactCurrency(value: number): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(Number.isFinite(value) ? value : 0);
+}
+
+export function formatCompactNumber(value: number): string {
+  return new Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(Number.isFinite(value) ? value : 0);
+}
+
+export function formatPercent(value: number, digits = 0): string {
+  return `${(Number.isFinite(value) ? value : 0).toFixed(digits)}%`;
+}
