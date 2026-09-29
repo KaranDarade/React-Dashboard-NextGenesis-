@@ -1,9 +1,9 @@
-# NextGenesis Control - Product Analytics Dashboard
+# StoreFlow — Product Management Dashboard
 
-A modern product admin dashboard for the free [DummyJSON](https://dummyjson.com)
-catalogue, built with Next.js (App Router), React, TypeScript, Tailwind CSS and
-Axios. It pairs a full product-management tool with a real-time analytics
-overview, styled with a premium glassmorphism ("Aurora Glass") design system.
+A premium product-management dashboard for the free
+[DummyJSON](https://dummyjson.com) catalogue. Built with Next.js (App Router),
+React, TypeScript, Tailwind CSS and Axios, styled with a dark, emerald-accented
+glass design system.
 
 - Repository: https://github.com/KaranDarade/React-Dashboard-NextGenesis-
 - Live demo: https://react-dashboard-nextgenesis.vercel.app
@@ -12,9 +12,9 @@ overview, styled with a premium glassmorphism ("Aurora Glass") design system.
 ## Tech stack
 
 - Next.js 16 (App Router, Turbopack) + React 19 + TypeScript
-- Tailwind CSS v4 with custom design tokens
+- Tailwind CSS v4 with custom dark design tokens
 - Axios for every HTTP call (one shared instance)
-- Charts and sparklines are hand-built SVG/CSS - no chart library
+- Charts and sparklines are hand-built SVG/CSS — no chart library
 - No React Query, SWR or table/pagination libraries
 
 ## Setup
@@ -33,70 +33,95 @@ npm run start    # serve the production build
 npm run lint     # eslint
 ```
 
-## The dashboard experience
+## Design direction
 
-The root route `/` is a live overview, not a landing page:
+A dark + emerald glass system ("StoreFlow"):
 
-- **Top bar** - page title, global search (`Ctrl/Cmd + K`), notifications
-  derived from real catalogue alerts, user menu and a quick "Add product" action.
-- **Glass sidebar** - grouped navigation (Overview, Products, Categories, Add
-  product, Profile) with an obvious-but-subtle active state, hover micro
-  interactions, tooltips when collapsed, a persisted collapse state, and a
-  slide-in drawer with overlay on mobile/tablet.
-- **KPI grid** - compact, information-dense cards: catalogue size, inventory
-  value, average rating, stock alerts and average discount, each with a real
-  context line and an interactive sparkline.
-- **Analytics** - category-mix donut (hover to inspect a slice), rating
-  distribution histogram, average price by category, inventory value by
-  category and a stock-health progress list.
-- **Live activity** - a real, client-side activity feed (session, search,
-  filter, sort, product views, create/edit/delete, manual refresh) with
-  timestamps and status.
-- **System status** - measured API latency, connection state, last sync,
-  auto-refresh state, dataset size and local change count.
-- **Categories page** - every real category with product count, average price,
-  inventory value, average rating and stock health; click through to a filtered
-  product list.
-- **Profile page** - the real `/auth/me` account, verified against the session.
+- **Surfaces** canvas `#070A08` → `#0B100D` → surface `#101713`; glass
+  `rgba(255,255,255,.055)` / elevated `.075`; borders `.08` / `.12`.
+- **Text** `#F0FDF4` / `#A7B8AD` / `#64746A` / `#3F4A43` (off-white, never pure
+  white).
+- **Accent** emerald `#22C55E` (+`#4ADE80`) used selectively — primary actions,
+  active nav, positive deltas, success/stock badges and focus rings. Semantic
+  amber/rose/blue appear only for warnings, destructive actions and info.
+- **Background** static, barely-visible emerald glows (no animated blobs, no
+  neon) and layered translucent surfaces for depth.
+- **Radius** cards 18px, panels 20px, buttons/inputs 12px; pill shapes reserved
+  for status badges and filter chips.
+- **Icons** one consistent inline-SVG (Lucide-style) set at 16–18px.
 
-### Honest, real-time data (no fabrication)
+## Application surfaces
+
+- **Shell** — "StoreFlow / Product Management" brand; sidebar (Dashboard,
+  Products, Categories, Analytics, Settings) with emerald active states,
+  collapsible with persistence, user card and logout; compact glass topbar with
+  breadcrumb, command search (`⌘/Ctrl + K`), alerts and account menu. On mobile:
+  a mini topbar plus a bottom tab bar (Home, Products, Analytics, More→drawer).
+- **Dashboard** — greeting header, a 4-card KPI strip (Total Products, Average
+  Rating, Total Inventory, Low Stock) with live session deltas, a catalogue
+  distribution area chart + category donut, **Recent Products** and
+  **Recent Activity** (with a Live indicator).
+- **Products (core)** — one cohesive command toolbar (search with in-input
+  spinner, grouped category dropdown, sort, page size, table/grid view toggle),
+  active filter chips, a dark glass table with a STATUS column and a per-row
+  `⋯` menu (View / Edit / Delete), integrated pagination
+  ("Showing 21–40 of 194"), and rich mobile product cards.
+- **Product details** — gallery + title/rating/price/stock, and
+  **Overview | Reviews | Details** tabs.
+- **Categories** — every real category with count, average price, inventory
+  value, average rating and stock health; click through to a filtered list.
+- **Analytics** — price-band area chart, category donut, rating histogram,
+  average price / inventory value by category, stock health, top brands and top
+  rated products — all computed from the live catalogue.
+- **Settings** — auto-refresh, low-stock threshold, clear local demo changes,
+  clear activity log and live API status.
+- **Login** — two-panel layout with an emerald-accented glass card.
+
+## Honest, real-time data (no fabrication)
 
 DummyJSON exposes no historical or event endpoints, so the dashboard never
 invents trends it cannot support:
 
 - Every KPI and chart is computed from the real product catalogue (fetched once
   in bulk with `limit=0` + a field `select`, then merged with local overrides).
-- There is no fake "% change vs last week". Instead, cards show real context
-  (counts, averages, distributions) and real session/override deltas.
-- Client-side activity and measured latency provide the genuinely live signals.
-- Data refreshes automatically every 30s (paused when the tab is hidden) and
-  shows a "last updated" time; the interval can be turned off.
+- KPI deltas are real: they compare the current aggregates with the **session
+  baseline** (so adding/editing/deleting products genuinely moves them) — not a
+  fabricated "vs last week".
+- The "live" signals are genuinely live: measured API latency, connection state,
+  30s polling (paused when the tab is hidden), and a real client-side activity
+  log.
 - Architecture note: swapping polling for a websocket/SSE feed later only means
   changing `useCatalogSnapshot`, not the UI.
 
-## Design system ("Aurora Glass")
+## Catalogue reality
 
-- Ambient aurora background (drifting gradient blobs + soft grid overlay) so
-  translucent surfaces actually read as glass.
-- Four glass elevation levels (`glass`, `glass-2`, `glass-strong`,
-  `glass-float`) defined once in `globals.css` and used via the `GlassCard`
-  component, creating consistent depth.
-- Consistent tokens for radius, spacing, shadows and typography; Inter loaded
-  through `next/font`.
-- Reusable micro-interactions (hover elevation, active glow, chart entrance)
-  and full `prefers-reduced-motion` support.
+The catalogue is the real DummyJSON dataset: **194 varied products** across 24
+categories (phones, laptops, watches, audio, shoes, dresses, fragrances,
+groceries, kitchen/sports/automotive gear, accessories and more), each with real
+images, widely varied prices, ratings and stock — so pagination, search,
+filtering, sorting and In/Low/Out statuses are all meaningful without any
+synthetic data. Fine-grained API slugs are grouped into friendly families
+(Electronics, Fashion, Watches, Beauty, Home & Living, Grocery, Sports,
+Automotive) purely for the filter UI (`src/lib/taxonomy.ts`); filtering still
+passes the real slug to the API.
+
+**Prices** are shown in INR using a fixed demo conversion (`1 $ ≈ ₹ 84`,
+`src/lib/format.ts`). These are demonstration values, not live exchange rates or
+real market prices; this is disclosed in the app.
 
 ## Routes
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Live analytics overview |
+| `/` | Analytics dashboard |
 | `/login` | Sign in |
-| `/products` | Product list with search/filter/sort/pagination |
+| `/products` | Product list (search/filter/sort/pagination) |
 | `/products/new` | Add product |
-| `/products/[id]` | Product details (gallery, description, reviews) |
+| `/products/[id]` | Product details |
 | `/products/[id]/edit` | Edit product |
 | `/categories` | Category analytics |
+| `/analytics` | Full analytics workspace |
+| `/settings` | Preferences |
 | `/profile` | Account details |
 | `not-found` | 404 |
 
@@ -105,20 +130,22 @@ invents trends it cannot support:
 ```
 src/
   app/
-    (dashboard)/            shell-wrapped app: overview, products, categories, profile
-    layout.tsx              fonts + ambient background
-    login/                  auth
+    (dashboard)/            shell-wrapped app: dashboard, products, categories, analytics, settings, profile
+    layout.tsx              font + ambient background
+    login/                  split auth screen
   components/
-    shell/                  sidebar, topbar, mobile drawer, search, menus, icons
-    dashboard/              KPI grid, metric card, chart cards, activity, status
-      charts/               SVG donut, sparkline, bar lists, histogram, progress
-    products/               list, table, cards, pagination, form, detail
-    ui/                     glass card, skeleton, badges, dialog, states
-  hooks/                    catalog snapshot, debounce, activity, now, profile
+    shell/                  sidebar, topbar, bottom nav, drawer, search, menus, icons
+    dashboard/              KPI grid, greeting, recent products/activity, chart cards
+      charts/               SVG area/donut/sparkline, bar lists, histogram, progress
+    products/               toolbar, table, cards, row menu, status badge, form, detail
+    ui/                     glass card, skeleton, badges, dialog, states, rating stars
+  hooks/                    catalog snapshot, debounce, activity, persisted settings
   lib/
     api/                    client.ts (shared axios), auth.ts, products.ts
     stats.ts                pure catalogue aggregations
-    activity.ts, system.ts  live activity + connection/latency helpers
+    taxonomy.ts             category family grouping
+    format.ts               INR demo formatting + helpers
+    activity.ts, system.ts  live activity + connection/latency
     overrides.ts            local create/edit/delete merge logic
     search-params.ts        safe URL parsing/building for list state
   store/                    overrides + dashboard data providers
@@ -134,8 +161,8 @@ All API calls live in `src/lib/api/*`; UI components never touch Axios directly.
 ```
 
 The URL is the source of truth, so refreshing or sharing a link reproduces the
-same result. Bad values are normalised: `?page=abc` -> 1, `?page=999` -> last
-real page, invalid `limit`/`sortBy` -> defaults.
+same result. Bad values are normalised: `?page=abc` → 1, `?page=999` → last real
+page, invalid `limit`/`sortBy` → defaults.
 
 ## Decisions and trade-offs
 
@@ -150,14 +177,14 @@ server pagination totals.
 
 The write endpoints return a plausible object but persist nothing. The app still
 calls them, then mirrors each change in a `localStorage`-backed overrides store
-that is merged over the API data (and reflected in the dashboard KPIs). A banner
-makes clear these changes are browser-only.
+that is merged over the API data (and reflected in the dashboard KPIs). Settings
+can clear these local changes; the UI states that they are browser-only.
 
 ### Fast typing never shows stale results
 
 Search is written to the URL live but the request is debounced. `useProducts`
 also aborts the previous request (`AbortController`) and tags responses with an
-incrementing id, dropping any late response - verified against `&delay=2000`.
+incrementing id, dropping any late response — verified against `&delay=2000`.
 
 ### Duplicate submissions
 
@@ -169,28 +196,30 @@ ref and a disabled button.
 **Choices.** List state lives in the URL for shareable links; every request goes
 through one Axios instance with interceptors; dashboard metrics are computed
 from real data only, and writes are mirrored locally rather than faked on the
-server. The redesign is structural: a dedicated `(dashboard)` route group, a
-glass shell, a shared `DashboardDataProvider` (one bulk fetch shared by the
-sidebar, topbar, KPI cards and charts) and small, single-purpose components.
+server. The redesign rebuilt the whole visual layer on a token-based dark system
+and split responsibilities into a glass shell, a dashboard data provider (one
+bulk fetch shared by the sidebar, topbar, KPI cards and charts) and small
+single-purpose components.
 
 **A problem I hit and how I fixed it.** Next.js 16 renamed `middleware` to
 `proxy`, and React 19's lint rules reject calling `setState` synchronously
 inside `useEffect` (and reassigning variables during render). I reworked the
-data hooks - including the new `useCatalogSnapshot` - to derive `loading`/`error`
+data hooks — including the new `useCatalogSnapshot` — to derive `loading`/`error`
 by comparing a query signature against the last completed result, and rewrote
 the donut slice math to avoid mutation during render, keeping the abort/stale
 protection intact.
 
 **Where AI helped.** I used an AI coding assistant to accelerate the design
-system and repetitive markup, to probe the live API for real response shapes and
-payload sizes, and it surfaced the Next 16 `middleware` -> `proxy` rename and the
-React 19 effect/immutability lint rules. The product/architecture decisions, the
-honest-metrics stance, the URL contract and final verification were directed and
-checked by me.
+system and repetitive markup, and to probe the live API for real response shapes
+and payload sizes. It also surfaced the Next 16 `middleware` → `proxy` rename and
+the React 19 effect/immutability lint rules. The product/architecture decisions,
+the honest-metrics stance, the URL contract and final verification were directed
+and checked by me.
 
 ## Known limitations
 
 - Changes are per-browser and are not saved on DummyJSON.
 - Polling is used for "real time"; the API has no push channel.
+- Prices are a fixed-rate INR demonstration of the API's USD values.
 - No automated test suite; verification was manual plus `lint`, `build` and a
   production smoke test of the route guard.
