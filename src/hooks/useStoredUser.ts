@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { buildDisplayUser } from "@/lib/credentials";
 import { USER_STORAGE_KEY } from "@/lib/constants";
 import type { AuthUser } from "@/types/product";
 
@@ -22,14 +23,15 @@ function getServerSnapshot(): string | null {
 }
 
 /**
- * Reads the logged-in user from localStorage without causing a hydration
- * mismatch (the server always renders null).
+ * Reads the logged-in user from localStorage without a hydration mismatch, and
+ * normalises the identity to the app's admin (so a stale demo session can never
+ * display the DummyJSON demo name).
  */
 export function useStoredUser(): AuthUser | null {
   const raw = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   if (!raw) return null;
   try {
-    return JSON.parse(raw) as AuthUser;
+    return buildDisplayUser(JSON.parse(raw) as AuthUser);
   } catch {
     return null;
   }

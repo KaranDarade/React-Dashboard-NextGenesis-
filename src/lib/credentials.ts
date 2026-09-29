@@ -1,3 +1,5 @@
+import type { AuthUser } from "@/types/product";
+
 /**
  * App-level admin credentials.
  *
@@ -31,4 +33,21 @@ export function isAdminCredentials(
     username.trim().toLowerCase() === ADMIN_CREDENTIALS.username.toLowerCase() &&
     password === ADMIN_CREDENTIALS.password
   );
+}
+
+/**
+ * Force the displayed identity to the admin. DummyJSON's token belongs to its
+ * demo account, so both stored sessions and `/auth/me` can otherwise leak the
+ * demo name into the UI. Every read of a user is normalised through this.
+ */
+export function buildDisplayUser(apiUser: AuthUser): AuthUser {
+  return {
+    id: apiUser.id,
+    username: ADMIN_IDENTITY.username,
+    email: ADMIN_IDENTITY.email,
+    firstName: ADMIN_IDENTITY.firstName,
+    lastName: ADMIN_IDENTITY.lastName,
+    gender: apiUser.gender,
+    image: "",
+  };
 }

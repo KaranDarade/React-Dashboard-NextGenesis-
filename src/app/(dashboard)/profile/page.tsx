@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { useProfile } from "@/hooks/useProfile";
 import { useStoredUser } from "@/hooks/useStoredUser";
 import { clearSession } from "@/lib/auth";
+import { buildDisplayUser } from "@/lib/credentials";
 import { cn } from "@/lib/format";
 import { useDashboardActivity } from "@/store/DashboardDataContext";
 
@@ -27,16 +28,7 @@ export default function ProfilePage() {
   const { user, loading, error, retry } = useProfile();
   const { log } = useDashboardActivity();
 
-  const profile = user
-    ? {
-        ...user,
-        firstName: stored?.firstName ?? user.firstName,
-        lastName: stored?.lastName ?? user.lastName,
-        username: stored?.username ?? user.username,
-        email: stored?.email ?? user.email,
-        image: stored?.image ?? user.image,
-      }
-    : stored;
+  const profile = user ? buildDisplayUser(user) : stored;
 
   const handleLogout = () => {
     log({ action: "Signed out", actor: profile?.firstName ?? "You" });

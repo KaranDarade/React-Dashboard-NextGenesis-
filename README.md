@@ -8,7 +8,6 @@ glass design system.
 - Repository: https://github.com/KaranDarade/React-Dashboard-NextGenesis-
 - Live demo: https://react-dashboard-nextgenesis.vercel.app
 - Admin login: username `daradekaran123@gmail.com`, password `KaranStore@123`
-  (the DummyJSON demo account `emilys` / `emilyspass` also works)
 
 ## Tech stack
 

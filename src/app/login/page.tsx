@@ -5,11 +5,7 @@ import { useState } from "react";
 import { StoreFlowMark } from "@/components/shell/icons";
 import { login } from "@/lib/api/auth";
 import { setSession } from "@/lib/auth";
-import {
-  ADMIN_CREDENTIALS,
-  ADMIN_IDENTITY,
-  isAdminCredentials,
-} from "@/lib/credentials";
+import { ADMIN_CREDENTIALS, buildDisplayUser } from "@/lib/credentials";
 
 const HIGHLIGHTS = [
   "Live catalogue analytics from the DummyJSON API",
@@ -36,18 +32,8 @@ export default function LoginPage() {
 
     setSubmitting(true);
     try {
-      const entered = username.trim();
-      const data = await login(entered, password);
-      const admin = isAdminCredentials(entered, password);
-      setSession(data.accessToken, {
-        id: data.id,
-        username: admin ? ADMIN_IDENTITY.username : data.username,
-        email: admin ? ADMIN_IDENTITY.email : data.email,
-        firstName: admin ? ADMIN_IDENTITY.firstName : data.firstName,
-        lastName: admin ? ADMIN_IDENTITY.lastName : data.lastName,
-        gender: data.gender,
-        image: admin ? "" : data.image,
-      });
+      const data = await login(username.trim(), password);
+      setSession(data.accessToken, buildDisplayUser(data));
       router.replace("/");
     } catch (cause) {
       setError(
@@ -140,7 +126,7 @@ export default function LoginPage() {
                   onChange={(event) => setPassword(event.target.value)}
                   autoComplete="current-password"
                   className={fieldClass}
-                  placeholder="emilyspass"
+                  placeholder="••••••••"
                 />
               </label>
 
