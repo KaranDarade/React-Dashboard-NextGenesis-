@@ -15,12 +15,12 @@ export function RatingStars({
       className="inline-flex items-center gap-1"
       aria-label={`Rating ${safeRating.toFixed(1)} out of 5`}
     >
-      <span aria-hidden className="text-sm text-amber-500">
+      <span aria-hidden className="text-sm text-warn">
         {STARS.slice(0, rounded)}
-        <span className="text-ink-500/25">{STARS.slice(rounded)}</span>
+        <span className="text-fg-4">{STARS.slice(rounded)}</span>
       </span>
       {showValue ? (
-        <span className="text-xs tabular-nums text-ink-500">
+        <span className="text-xs text-fg-3 tabular-nums">
           {safeRating.toFixed(1)}
         </span>
       ) : null}

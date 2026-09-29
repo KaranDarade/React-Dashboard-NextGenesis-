@@ -86,9 +86,10 @@ function validate(values: FormValues): {
 }
 
 const fieldClass =
-  "w-full rounded-xl border bg-white/55 px-3 py-2.5 text-sm text-ink-900 shadow-sm outline-none backdrop-blur transition placeholder:text-ink-500/60 focus:ring-2";
-const fieldOk = "border-white/60 focus:border-indigo-300 focus:ring-indigo-200";
-const fieldBad = "border-rose-300 focus:border-rose-400 focus:ring-rose-200";
+  "focus-brand w-full rounded-xl border bg-white/[0.04] px-3 py-2.5 text-sm text-fg outline-none transition placeholder:text-fg-4 hover:border-line-strong focus:bg-white/[0.06]";
+const fieldOk = "border-line focus:border-brand/50";
+const fieldBad = "border-danger/40 focus:border-danger/60";
+const labelClass = "text-xs font-medium text-fg-2";
 
 export function ProductForm({
   initialValues,
@@ -129,70 +130,60 @@ export function ProductForm({
     onSubmit(input);
   };
 
-  const renderError = (field: keyof FormValues) =>
+  const errorFor = (field: keyof FormValues) =>
     errors[field] ? (
-      <span className="text-xs text-rose-600">{errors[field]}</span>
+      <span className="text-xs text-danger">{errors[field]}</span>
     ) : null;
 
   return (
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="glass grid grid-cols-1 gap-5 rounded-2xl p-5 sm:p-6"
+      className="glass grid grid-cols-1 gap-5 rounded-2xl p-5 sm:p-6 lg:grid-cols-2"
     >
-      <label className="flex flex-col gap-1">
-        <span className="text-xs font-medium uppercase tracking-wide text-ink-500">
-          Title
-        </span>
+      <label className="flex flex-col gap-1.5 lg:col-span-2">
+        <span className={labelClass}>Title</span>
         <input
           value={values.title}
           onChange={(event) => setField("title", event.target.value)}
           className={cn(fieldClass, errors.title ? fieldBad : fieldOk)}
-          placeholder="e.g. Wireless Headphones"
+          placeholder="e.g. Apple iPhone 15"
         />
-        {renderError("title")}
+        {errorFor("title")}
       </label>
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <label className="flex flex-col gap-1">
-          <span className="text-xs font-medium uppercase tracking-wide text-ink-500">
-            Category
-          </span>
-          <input
-            value={values.category}
-            onChange={(event) => setField("category", event.target.value)}
-            list="product-categories"
-            className={cn(fieldClass, errors.category ? fieldBad : fieldOk)}
-            placeholder="e.g. smartphones"
-          />
-          <datalist id="product-categories">
-            {categories.map((category) => (
-              <option key={category.slug} value={category.slug}>
-                {category.name}
-              </option>
-            ))}
-          </datalist>
-          {renderError("category")}
-        </label>
+      <label className="flex flex-col gap-1.5">
+        <span className={labelClass}>Category</span>
+        <input
+          value={values.category}
+          onChange={(event) => setField("category", event.target.value)}
+          list="product-categories"
+          className={cn(fieldClass, errors.category ? fieldBad : fieldOk)}
+          placeholder="e.g. smartphones"
+        />
+        <datalist id="product-categories">
+          {categories.map((category) => (
+            <option key={category.slug} value={category.slug}>
+              {category.name}
+            </option>
+          ))}
+        </datalist>
+        {errorFor("category")}
+      </label>
 
-        <label className="flex flex-col gap-1">
-          <span className="text-xs font-medium uppercase tracking-wide text-ink-500">
-            Brand (optional)
-          </span>
-          <input
-            value={values.brand}
-            onChange={(event) => setField("brand", event.target.value)}
-            className={cn(fieldClass, fieldOk)}
-            placeholder="e.g. Apple"
-          />
-        </label>
-      </div>
+      <label className="flex flex-col gap-1.5">
+        <span className={labelClass}>Brand (optional)</span>
+        <input
+          value={values.brand}
+          onChange={(event) => setField("brand", event.target.value)}
+          className={cn(fieldClass, fieldOk)}
+          placeholder="e.g. Apple"
+        />
+      </label>
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-        <label className="flex flex-col gap-1">
-          <span className="text-xs font-medium uppercase tracking-wide text-ink-500">
-            Price (USD)
-          </span>
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 lg:col-span-2">
+        <label className="flex flex-col gap-1.5">
+          <span className={labelClass}>Price (USD, shown in ₹)</span>
           <input
             value={values.price}
             onChange={(event) => setField("price", event.target.value)}
@@ -200,13 +191,11 @@ export function ProductForm({
             className={cn(fieldClass, errors.price ? fieldBad : fieldOk)}
             placeholder="99.99"
           />
-          {renderError("price")}
+          {errorFor("price")}
         </label>
 
-        <label className="flex flex-col gap-1">
-          <span className="text-xs font-medium uppercase tracking-wide text-ink-500">
-            Stock
-          </span>
+        <label className="flex flex-col gap-1.5">
+          <span className={labelClass}>Stock</span>
           <input
             value={values.stock}
             onChange={(event) => setField("stock", event.target.value)}
@@ -214,13 +203,11 @@ export function ProductForm({
             className={cn(fieldClass, errors.stock ? fieldBad : fieldOk)}
             placeholder="25"
           />
-          {renderError("stock")}
+          {errorFor("stock")}
         </label>
 
-        <label className="flex flex-col gap-1">
-          <span className="text-xs font-medium uppercase tracking-wide text-ink-500">
-            Rating
-          </span>
+        <label className="flex flex-col gap-1.5">
+          <span className={labelClass}>Rating</span>
           <input
             value={values.rating}
             onChange={(event) => setField("rating", event.target.value)}
@@ -228,14 +215,12 @@ export function ProductForm({
             className={cn(fieldClass, errors.rating ? fieldBad : fieldOk)}
             placeholder="4.5"
           />
-          {renderError("rating")}
+          {errorFor("rating")}
         </label>
       </div>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-xs font-medium uppercase tracking-wide text-ink-500">
-          Description
-        </span>
+      <label className="flex flex-col gap-1.5 lg:col-span-2">
+        <span className={labelClass}>Description</span>
         <textarea
           value={values.description}
           onChange={(event) => setField("description", event.target.value)}
@@ -243,13 +228,11 @@ export function ProductForm({
           className={cn(fieldClass, errors.description ? fieldBad : fieldOk)}
           placeholder="Short description of the product..."
         />
-        {renderError("description")}
+        {errorFor("description")}
       </label>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-xs font-medium uppercase tracking-wide text-ink-500">
-          Image URL (optional)
-        </span>
+      <label className="flex flex-col gap-1.5 lg:col-span-2">
+        <span className={labelClass}>Image URL (optional)</span>
         <input
           value={values.thumbnail}
           onChange={(event) => setField("thumbnail", event.target.value)}
@@ -258,19 +241,19 @@ export function ProductForm({
         />
       </label>
 
-      <div className="flex justify-end gap-3">
+      <div className="flex justify-end gap-3 lg:col-span-2">
         <button
           type="button"
           onClick={onCancel}
           disabled={submitting}
-          className="rounded-xl border border-white/60 bg-white/55 px-4 py-2 text-sm font-medium text-ink-700 transition hover:bg-white/90 disabled:opacity-50"
+          className="focus-brand rounded-xl border border-line px-4 py-2 text-sm font-medium text-fg-2 transition hover:bg-white/[0.05] hover:text-fg disabled:opacity-50"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 px-5 py-2 text-sm font-medium text-white shadow-[0_12px_26px_-14px_rgba(79,70,229,0.9)] transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-60"
+          className="focus-brand rounded-xl bg-brand px-5 py-2 text-sm font-semibold text-brand-darker transition hover:bg-brand-bright disabled:opacity-60"
         >
           {submitting ? "Saving..." : submitLabel}
         </button>

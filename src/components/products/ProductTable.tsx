@@ -1,104 +1,89 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import { Badge, stockTone } from "@/components/ui/Badge";
+import { ProductRowMenu } from "@/components/products/ProductRowMenu";
+import { StatusBadge, type StockStatus } from "@/components/products/StatusBadge";
 import { RatingStars } from "@/components/ui/RatingStars";
 import { FALLBACK_IMAGE } from "@/lib/constants";
-import { formatCurrency } from "@/lib/format";
+import { formatPrice } from "@/lib/format";
 import { isLocalId } from "@/lib/overrides";
 import type { Product } from "@/types/product";
 
 export function ProductTable({
   products,
+  statusOf,
   onDelete,
 }: {
   products: Product[];
+  statusOf: (stock: number) => StockStatus;
   onDelete: (product: Product) => void;
 }) {
   return (
-    <div className="glass hidden overflow-hidden rounded-2xl md:block">
-      <div className="scroll-slim overflow-x-auto">
-        <table className="w-full border-collapse text-left text-sm">
-          <thead>
-            <tr className="text-[11px] uppercase tracking-wide text-ink-500">
-              <th className="px-4 py-3 font-medium">Product</th>
-              <th className="px-4 py-3 font-medium">Category</th>
-              <th className="px-4 py-3 font-medium">Price</th>
-              <th className="px-4 py-3 font-medium">Rating</th>
-              <th className="px-4 py-3 font-medium">Stock</th>
-              <th className="px-4 py-3 text-right font-medium">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => (
-              <tr
-                key={String(product.id)}
-                className="border-t border-white/50 transition hover:bg-white/45"
-              >
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={product.thumbnail || FALLBACK_IMAGE}
-                      alt={product.title}
-                      loading="lazy"
-                      className="h-11 w-11 shrink-0 rounded-xl bg-white/60 object-cover ring-1 ring-white/60"
-                    />
-                    <div className="min-w-0">
-                      <Link
-                        href={`/products/${product.id}`}
-                        className="line-clamp-1 font-medium text-ink-900 transition hover:text-indigo-600"
-                      >
-                        {product.title}
-                      </Link>
-                      {isLocalId(product.id) ? (
-                        <Badge tone="info" className="mt-1">
-                          Added locally
-                        </Badge>
-                      ) : null}
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3 capitalize text-ink-600">
-                  {product.category}
-                </td>
-                <td className="px-4 py-3 font-medium text-ink-900">
-                  {formatCurrency(product.price)}
-                </td>
-                <td className="px-4 py-3">
-                  <RatingStars rating={product.rating} />
-                </td>
-                <td className="px-4 py-3">
-                  <Badge tone={stockTone(product.stock)}>
-                    {product.stock} in stock
-                  </Badge>
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex justify-end gap-2">
+    <div className="scroll-slim overflow-x-auto">
+      <table className="w-full min-w-[720px] border-collapse text-left text-sm">
+        <thead>
+          <tr className="text-[10px] uppercase tracking-[0.14em] text-fg-3">
+            <th className="px-4 py-3 font-medium">Product</th>
+            <th className="px-4 py-3 font-medium">Category</th>
+            <th className="px-4 py-3 font-medium">Price</th>
+            <th className="px-4 py-3 font-medium">Rating</th>
+            <th className="px-4 py-3 font-medium">Stock</th>
+            <th className="px-4 py-3 font-medium">Status</th>
+            <th className="px-4 py-3 text-right font-medium">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map((product) => (
+            <tr
+              key={String(product.id)}
+              className="border-t border-line transition hover:bg-white/[0.035]"
+            >
+              <td className="px-4 py-3">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={product.thumbnail || FALLBACK_IMAGE}
+                    alt={product.title}
+                    loading="lazy"
+                    className="h-10 w-10 shrink-0 rounded-lg bg-white/[0.04] object-cover ring-1 ring-line"
+                  />
+                  <div className="min-w-0">
                     <Link
                       href={`/products/${product.id}`}
-                      className="rounded-lg border border-white/60 bg-white/55 px-2.5 py-1 text-xs font-medium text-ink-700 transition hover:bg-white/90"
+                      className="line-clamp-1 font-medium text-fg transition hover:text-brand"
                     >
-                      View
+                      {product.title}
                     </Link>
-                    <Link
-                      href={`/products/${product.id}/edit`}
-                      className="rounded-lg border border-white/60 bg-white/55 px-2.5 py-1 text-xs font-medium text-ink-700 transition hover:bg-white/90"
-                    >
-                      Edit
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={() => onDelete(product)}
-                      className="rounded-lg border border-rose-200/70 bg-rose-50/70 px-2.5 py-1 text-xs font-medium text-rose-600 transition hover:bg-rose-100"
-                    >
-                      Delete
-                    </button>
+                    {isLocalId(product.id) ? (
+                      <span className="text-[10px] font-medium text-brand">
+                        Added locally
+                      </span>
+                    ) : null}
                   </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                </div>
+              </td>
+              <td className="px-4 py-3 capitalize text-fg-2">
+                {product.category}
+              </td>
+              <td className="px-4 py-3 font-medium text-fg tabular-nums">
+                {formatPrice(product.price)}
+              </td>
+              <td className="px-4 py-3">
+                <RatingStars rating={product.rating} />
+              </td>
+              <td className="px-4 py-3 text-fg-2 tabular-nums">
+                {product.stock}
+              </td>
+              <td className="px-4 py-3">
+                <StatusBadge status={statusOf(product.stock)} />
+              </td>
+              <td className="px-4 py-3">
+                <div className="flex justify-end">
+                  <ProductRowMenu product={product} onDelete={onDelete} />
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

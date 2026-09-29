@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ImageGallery } from "@/components/products/ImageGallery";
 import { ReviewList } from "@/components/products/ReviewList";
-import { Badge, stockTone } from "@/components/ui/Badge";
+import { StatusBadge } from "@/components/products/StatusBadge";
+import { Badge } from "@/components/ui/Badge";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { GlassCard } from "@/components/ui/GlassCard";
@@ -14,16 +15,21 @@ import { RatingStars } from "@/components/ui/RatingStars";
 import { Spinner } from "@/components/ui/Spinner";
 import { useProduct } from "@/hooks/useProduct";
 import { deleteProduct } from "@/lib/api/products";
-import { formatCurrency } from "@/lib/format";
+import { cn, formatPrice } from "@/lib/format";
 import { applyPatch, findCreated, isDeleted, isLocalId } from "@/lib/overrides";
-import { useDashboardActivity } from "@/store/DashboardDataContext";
+import {
+  useDashboardActivity,
+  useDashboardData,
+} from "@/store/DashboardDataContext";
 import { useProductOverrides } from "@/store/ProductOverridesContext";
+
+type Tab = "overview" | "reviews" | "details";
 
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex justify-between gap-4">
-      <dt className="text-ink-500">{label}</dt>
-      <dd className="text-right font-medium text-ink-900">{value}</dd>
+    <div className="flex justify-between gap-4 border-t border-line py-2.5 first:border-t-0">
+      <dt className="text-fg-3">{label}</dt>
+      <dd className="text-right font-medium text-fg">{value}</dd>
     </div>
   );
 }
@@ -33,8 +39,10 @@ export function ProductDetail({ id }: { id: string }) {
   const { state, deleteLocal } = useProductOverrides();
   const remote = useProduct(id);
   const { log } = useDashboardActivity();
+  const { statusOf } = useDashboardData();
   const [confirming, setConfirming] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [tab, setTab] = useState<Tab>("overview");
   const loggedView = useRef(false);
 
   const created = findCreated(state, id);
@@ -86,28 +94,34 @@ export function ProductDetail({ id }: { id: string }) {
     }
   };
 
+  const tabs: { id: Tab; label: string }[] = [
+    { id: "overview", label: "Overview" },
+    { id: "reviews", label: `Reviews (${product.reviews?.length ?? 0})` },
+    { id: "details", label: "Details" },
+  ];
+
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link
           href="/products"
-          className="text-sm text-ink-600 transition hover:text-indigo-600"
+          className="focus-brand rounded-lg text-sm text-fg-3 transition hover:text-brand"
         >
-          &larr; Back to products
+          ← Back to products
         </Link>
         <div className="flex gap-2">
           <Link
             href={`/products/${product.id}/edit`}
-            className="rounded-xl border border-white/60 bg-white/55 px-3.5 py-2 text-sm font-medium text-ink-700 transition hover:bg-white/90"
+            className="focus-brand rounded-xl border border-line px-3.5 py-2 text-sm font-medium text-fg-2 transition hover:bg-white/[0.05] hover:text-fg"
           >
-            Edit
+            Edit Product
           </Link>
           <button
             type="button"
             onClick={() => setConfirming(true)}
-            className="rounded-xl border border-rose-200/70 bg-rose-50/70 px-3.5 py-2 text-sm font-medium text-rose-600 transition hover:bg-rose-100"
+            className="focus-brand rounded-xl border border-danger/30 bg-danger/10 px-3.5 py-2 text-sm font-medium text-danger transition hover:bg-danger/15"
           >
-            Delete
+            Delete Product
           </button>
         </div>
       </div>
@@ -115,29 +129,29 @@ export function ProductDetail({ id }: { id: string }) {
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <ImageGallery images={images} title={product.title} />
 
-        <GlassCard className="flex flex-col gap-4 p-5">
+        <div className="flex flex-col gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <Badge tone="info" className="capitalize">
                 {product.category}
               </Badge>
               {isLocalId(product.id) ? (
-                <Badge tone="info">Added locally</Badge>
+                <Badge tone="success">Added locally</Badge>
               ) : null}
               {product.brand ? <Badge>{product.brand}</Badge> : null}
             </div>
-            <h1 className="mt-2 text-2xl font-semibold tracking-tight text-ink-900">
+            <h1 className="mt-2 text-2xl font-semibold tracking-tight text-fg">
               {product.title}
             </h1>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <span className="text-2xl font-semibold text-ink-900">
-              {formatCurrency(discounted ?? product.price)}
+            <span className="text-2xl font-semibold text-fg tabular-nums">
+              {formatPrice(discounted ?? product.price)}
             </span>
             {discounted ? (
-              <span className="text-sm text-ink-500 line-through">
-                {formatCurrency(product.price)}
+              <span className="text-sm text-fg-4 line-through">
+                {formatPrice(product.price)}
               </span>
             ) : null}
             {product.discountPercentage ? (
@@ -149,63 +163,107 @@ export function ProductDetail({ id }: { id: string }) {
 
           <div className="flex flex-wrap items-center gap-4">
             <RatingStars rating={product.rating} />
-            <Badge tone={stockTone(product.stock)}>
-              {product.stock} in stock
-            </Badge>
-            {product.availabilityStatus ? (
-              <Badge>{product.availabilityStatus}</Badge>
-            ) : null}
+            <StatusBadge status={statusOf(product.stock)} />
+            <span className="text-sm text-fg-2">
+              Stock: <span className="text-fg">{product.stock}</span>
+            </span>
           </div>
 
-          {product.description ? (
-            <p className="text-sm leading-relaxed text-ink-600">
-              {product.description}
-            </p>
-          ) : null}
-
-          <dl className="glass-2 grid grid-cols-1 gap-2 rounded-2xl p-4 text-sm sm:grid-cols-2">
-            {product.sku ? <DetailRow label="SKU" value={product.sku} /> : null}
-            {product.weight ? (
-              <DetailRow label="Weight" value={String(product.weight)} />
-            ) : null}
-            {product.warrantyInformation ? (
-              <DetailRow label="Warranty" value={product.warrantyInformation} />
-            ) : null}
-            {product.shippingInformation ? (
-              <DetailRow label="Shipping" value={product.shippingInformation} />
-            ) : null}
-            {product.returnPolicy ? (
-              <DetailRow label="Returns" value={product.returnPolicy} />
-            ) : null}
-            {product.minimumOrderQuantity ? (
-              <DetailRow
-                label="Min order"
-                value={String(product.minimumOrderQuantity)}
-              />
-            ) : null}
-          </dl>
-
-          {product.tags && product.tags.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {product.tags.map((tag) => (
-                <Badge key={tag}>#{tag}</Badge>
-              ))}
+          <div className="glass-2 rounded-2xl p-4 text-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-fg-3">Availability</span>
+              <span className="font-medium text-fg">
+                {product.availabilityStatus ?? "—"}
+              </span>
             </div>
-          ) : null}
-        </GlassCard>
+          </div>
+        </div>
       </div>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-semibold tracking-tight text-ink-900">
-          Reviews
-        </h2>
-        <ReviewList reviews={product.reviews ?? []} />
-      </section>
+      <GlassCard className="p-5">
+        <div className="flex gap-1 border-b border-line">
+          {tabs.map((entry) => (
+            <button
+              key={entry.id}
+              type="button"
+              onClick={() => setTab(entry.id)}
+              className={cn(
+                "focus-brand relative px-3.5 py-2.5 text-sm font-medium transition",
+                tab === entry.id ? "text-fg" : "text-fg-3 hover:text-fg-2",
+              )}
+            >
+              {entry.label}
+              {tab === entry.id ? (
+                <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-brand" />
+              ) : null}
+            </button>
+          ))}
+        </div>
+
+        <div className="pt-4">
+          {tab === "overview" ? (
+            <div className="flex flex-col gap-4">
+              <p className="max-w-3xl text-sm leading-relaxed text-fg-2">
+                {product.description ?? "No description provided."}
+              </p>
+              {product.tags && product.tags.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {product.tags.map((tag) => (
+                    <Badge key={tag}>#{tag}</Badge>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+
+          {tab === "reviews" ? (
+            <ReviewList reviews={product.reviews ?? []} />
+          ) : null}
+
+          {tab === "details" ? (
+            <dl className="max-w-2xl text-sm">
+              <DetailRow label="Category" value={product.category} />
+              <DetailRow label="Brand" value={product.brand ?? "—"} />
+              <DetailRow label="SKU" value={product.sku ?? "—"} />
+              <DetailRow
+                label="Weight"
+                value={product.weight ? String(product.weight) : "—"}
+              />
+              <DetailRow
+                label="Warranty"
+                value={product.warrantyInformation ?? "—"}
+              />
+              <DetailRow
+                label="Shipping"
+                value={product.shippingInformation ?? "—"}
+              />
+              <DetailRow label="Returns" value={product.returnPolicy ?? "—"} />
+              <DetailRow
+                label="Min order"
+                value={
+                  product.minimumOrderQuantity
+                    ? String(product.minimumOrderQuantity)
+                    : "—"
+                }
+              />
+              <DetailRow
+                label="Discount"
+                value={
+                  product.discountPercentage
+                    ? `${product.discountPercentage}%`
+                    : "—"
+                }
+              />
+            </dl>
+          ) : null}
+        </div>
+      </GlassCard>
 
       <ConfirmDialog
         open={confirming}
-        title="Delete product"
-        message={`Are you sure you want to delete "${product.title}"? This cannot be undone.`}
+        title="Delete product?"
+        message={`This will remove "${product.title}" from the current catalog. Changes are stored in this browser only.`}
+        confirmLabel="Delete Product"
         busy={deleting}
         onConfirm={handleDelete}
         onCancel={() => {

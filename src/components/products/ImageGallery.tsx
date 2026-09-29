@@ -22,11 +22,11 @@ export function ImageGallery({
         <img
           src={current}
           alt={title}
-          className="h-72 w-full rounded-xl bg-white/60 object-contain sm:h-96"
+          className="h-72 w-full rounded-xl bg-white/[0.03] object-contain sm:h-[26rem]"
         />
       </div>
       {gallery.length > 1 ? (
-        <div className="flex flex-wrap gap-2">
+        <div className="no-scrollbar flex gap-2 overflow-x-auto">
           {gallery.map((image, index) => (
             <button
               key={`${image}-${index}`}
@@ -34,10 +34,10 @@ export function ImageGallery({
               onClick={() => setActive(index)}
               aria-label={`Show image ${index + 1}`}
               className={cn(
-                "h-16 w-16 overflow-hidden rounded-xl border-2 bg-white/60 transition",
+                "focus-brand h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 bg-white/[0.03] transition",
                 index === active
-                  ? "border-indigo-500 ring-2 ring-indigo-200"
-                  : "border-white/60 hover:border-white/90",
+                  ? "border-brand"
+                  : "border-line hover:border-line-strong",
               )}
             >
               <img

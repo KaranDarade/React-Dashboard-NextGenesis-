@@ -38,24 +38,24 @@ export function ConfirmDialog({
         type="button"
         aria-label="Close dialog"
         onClick={onCancel}
-        className="absolute inset-0 cursor-default bg-ink-950/40 backdrop-blur-sm"
+        className="absolute inset-0 cursor-default bg-black/65 backdrop-blur-sm"
       />
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-title"
-        className="glass-float relative w-full max-w-md rounded-2xl p-6 chart-rise"
+        className="glass-float pop relative w-full max-w-md rounded-2xl p-6"
       >
-        <h2 id="confirm-title" className="text-lg font-semibold text-ink-900">
+        <h2 id="confirm-title" className="text-lg font-semibold text-fg">
           {title}
         </h2>
-        <p className="mt-2 text-sm text-ink-500">{message}</p>
+        <p className="mt-2 text-sm text-fg-2">{message}</p>
         <div className="mt-6 flex justify-end gap-3">
           <button
             type="button"
             onClick={onCancel}
             disabled={busy}
-            className="rounded-xl border border-white/60 bg-white/60 px-4 py-2 text-sm font-medium text-ink-700 transition hover:bg-white/90 disabled:opacity-50"
+            className="focus-brand rounded-xl border border-line px-4 py-2 text-sm font-medium text-fg-2 transition hover:bg-white/[0.05] hover:text-fg disabled:opacity-50"
           >
             {cancelLabel}
           </button>
@@ -63,7 +63,7 @@ export function ConfirmDialog({
             type="button"
             onClick={onConfirm}
             disabled={busy}
-            className="rounded-xl bg-rose-500 px-4 py-2 text-sm font-medium text-white shadow-[0_12px_26px_-14px_rgba(244,63,94,0.9)] transition hover:-translate-y-0.5 hover:bg-rose-600 disabled:opacity-50"
+            className="focus-brand rounded-xl bg-danger px-4 py-2 text-sm font-medium text-canvas transition hover:brightness-110 disabled:opacity-50"
           >
             {busy ? "Deleting..." : confirmLabel}
           </button>

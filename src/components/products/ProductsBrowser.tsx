@@ -3,21 +3,29 @@
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FilterSort } from "@/components/products/FilterSort";
+import { FilterChips, type FilterChip } from "@/components/products/FilterChips";
 import { Pagination } from "@/components/products/Pagination";
 import { ProductGrid } from "@/components/products/ProductGrid";
+import {
+  ProductToolbar,
+  type ProductView,
+} from "@/components/products/ProductToolbar";
 import { ProductTable } from "@/components/products/ProductTable";
-import { SearchBar } from "@/components/products/SearchBar";
-import { PlusIcon } from "@/components/shell/icons";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Spinner } from "@/components/ui/Spinner";
+import { PlusIcon } from "@/components/shell/icons";
 import { useDebounce } from "@/hooks/useDebounce";
+import { usePersistedString } from "@/hooks/usePersistedString";
 import { useProducts } from "@/hooks/useProducts";
 import { deleteProduct } from "@/lib/api/products";
-import { DEBOUNCE_MS } from "@/lib/constants";
+import {
+  DEBOUNCE_MS,
+  SORT_OPTIONS,
+  STORAGE_KEYS,
+} from "@/lib/constants";
 import { decorateList, filterCreated, isLocalId } from "@/lib/overrides";
 import {
   buildListQuery,
@@ -52,9 +60,14 @@ export function ProductsBrowser() {
     loading: catalogLoading,
     error: catalogError,
     refresh: refreshCatalog,
+    statusOf,
   } = useDashboardData();
   const { state, deleteLocal } = useProductOverrides();
   const { log } = useDashboardActivity();
+  const [view, setView] = usePersistedString(
+    STORAGE_KEYS.productView,
+    "table",
+  );
 
   const [pendingDelete, setPendingDelete] = useState<Product | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -159,81 +172,145 @@ export function ProductsBrowser() {
     }
   };
 
+  const chips = useMemo<FilterChip[]>(() => {
+    const list: FilterChip[] = [];
+    if (query.q) {
+      list.push({
+        key: "q",
+        label: `Search: "${query.q}"`,
+        onRemove: () => replaceQuery({ q: "", page: 1 }),
+      });
+    }
+    if (query.category) {
+      const name =
+        categories.find((item) => item.slug === query.category)?.name ??
+        query.category;
+      list.push({
+        key: "category",
+        label: `Category: ${name}`,
+        onRemove: () => replaceQuery({ category: "", page: 1 }),
+      });
+    }
+    if (query.sortBy) {
+      const value = sortValue(query.sortBy, query.order);
+      const label =
+        SORT_OPTIONS.find((option) => option.value === value)?.label ??
+        query.sortBy;
+      list.push({
+        key: "sort",
+        label: label.replace("Sort: ", ""),
+        onRemove: () => replaceQuery({ sortBy: "", order: "asc", page: 1 }),
+      });
+    }
+    return list;
+  }, [query, categories, replaceQuery]);
+
   const showEmpty = !loading && !error && products.length === 0;
   const showData = !loading && !error && products.length > 0;
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="text-lg font-semibold tracking-tight text-ink-900">
+          <h2 className="text-xl font-semibold tracking-tight text-fg">
             Products
           </h2>
-          <p className="mt-0.5 text-sm text-ink-500">
-            {adjustedTotal.toLocaleString()} products in the catalogue.
+          <p className="mt-0.5 text-sm text-fg-2">
+            Manage your product catalog.
           </p>
         </div>
         <Link
           href="/products/new"
-          className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 px-3.5 py-2 text-sm font-medium text-white shadow-[0_10px_24px_-12px_rgba(79,70,229,0.9)] transition hover:-translate-y-0.5 sm:hidden"
+          className="focus-brand inline-flex items-center gap-1.5 rounded-xl bg-brand px-3.5 py-2 text-sm font-medium text-brand-darker transition hover:bg-brand-bright"
         >
           <PlusIcon className="h-4 w-4" />
-          Add
+          Add Product
         </Link>
       </div>
 
-      <GlassCard className="flex flex-col gap-4 p-4">
-        <SearchBar value={query.q} onChange={handleSearch} loading={loading} />
-        <FilterSort
-          categories={categories}
-          category={query.category}
-          onCategoryChange={handleCategory}
-          sort={sortValue(query.sortBy, query.order)}
-          onSortChange={handleSort}
-          loading={catalogLoading}
-          error={catalogError}
-          onRetry={refreshCatalog}
-        />
-        {query.q ? (
-          <p className="text-xs text-ink-500">
-            Category filtering is paused while searching: the API cannot search
-            and filter by category at the same time.
-          </p>
-        ) : null}
-      </GlassCard>
+      <ProductToolbar
+        search={query.q}
+        onSearch={handleSearch}
+        searchLoading={loading}
+        categories={categories}
+        categoriesLoading={catalogLoading}
+        categoriesError={catalogError}
+        onRetryCategories={refreshCatalog}
+        category={query.category}
+        onCategory={handleCategory}
+        sort={sortValue(query.sortBy, query.order)}
+        onSort={handleSort}
+        limit={query.limit}
+        onLimit={(limit) => replaceQuery({ limit, page: 1 })}
+        view={view as ProductView}
+        onViewChange={(next) => setView(next)}
+      />
+
+      <FilterChips chips={chips} />
+
+      {query.q && !loading && !error ? (
+        <p className="text-xs text-fg-3">
+          Search results for{" "}
+          <span className="text-fg-2">“{query.q}”</span> · {adjustedTotal}{" "}
+          products
+        </p>
+      ) : null}
 
       {loading ? <Spinner label="Loading products..." /> : null}
       {error ? <ErrorState message={error} onRetry={retry} /> : null}
+
       {showEmpty ? (
         <EmptyState
           title="No products found"
-          description="Try a different search term or clear the filters."
+          description="Try changing your search or filters."
           action={
-            query.q || query.category || query.sortBy ? (
-              <button
-                type="button"
-                onClick={() =>
-                  replaceQuery({
-                    q: "",
-                    category: "",
-                    sortBy: "",
-                    order: "asc",
-                    page: 1,
-                  })
-                }
-                className="rounded-xl border border-white/60 bg-white/60 px-4 py-2 text-sm font-medium text-ink-700 transition hover:bg-white/90"
-              >
-                Clear filters
-              </button>
-            ) : null
+            <button
+              type="button"
+              onClick={() =>
+                replaceQuery({
+                  q: "",
+                  category: "",
+                  sortBy: "",
+                  order: "asc",
+                  page: 1,
+                })
+              }
+              className="focus-brand rounded-xl border border-line px-4 py-2 text-sm font-medium text-fg-2 transition hover:bg-white/[0.05] hover:text-fg"
+            >
+              Clear filters
+            </button>
           }
         />
       ) : null}
 
       {showData ? (
         <>
-          <ProductTable products={products} onDelete={setPendingDelete} />
-          <ProductGrid products={products} onDelete={setPendingDelete} />
+          <div className="glass hidden rounded-2xl md:block">
+            {view === "table" ? (
+              <ProductTable
+                products={products}
+                statusOf={statusOf}
+                onDelete={setPendingDelete}
+              />
+            ) : (
+              <div className="p-3">
+                <ProductGrid
+                  products={products}
+                  statusOf={statusOf}
+                  onDelete={setPendingDelete}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="md:hidden">
+            <ProductGrid
+              products={products}
+              statusOf={statusOf}
+              onDelete={setPendingDelete}
+            />
+          </div>
+
           <GlassCard className="p-4">
             <Pagination
               page={query.page}
@@ -248,12 +325,13 @@ export function ProductsBrowser() {
 
       <ConfirmDialog
         open={pendingDelete !== null}
-        title="Delete product"
+        title="Delete product?"
         message={
           pendingDelete
-            ? `Are you sure you want to delete "${pendingDelete.title}"? This cannot be undone.`
+            ? `This will remove "${pendingDelete.title}" from the current catalog. Changes are stored in this browser only.`
             : ""
         }
+        confirmLabel="Delete Product"
         busy={deleting}
         onConfirm={handleConfirmDelete}
         onCancel={() => {

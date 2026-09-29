@@ -1,69 +1,62 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import { Badge, stockTone } from "@/components/ui/Badge";
+import { ProductRowMenu } from "@/components/products/ProductRowMenu";
+import { StatusBadge, type StockStatus } from "@/components/products/StatusBadge";
+import { GlassCard } from "@/components/ui/GlassCard";
 import { RatingStars } from "@/components/ui/RatingStars";
 import { FALLBACK_IMAGE } from "@/lib/constants";
-import { formatCurrency } from "@/lib/format";
+import { formatPrice } from "@/lib/format";
 import { isLocalId } from "@/lib/overrides";
 import type { Product } from "@/types/product";
 
 export function ProductCard({
   product,
+  statusOf,
   onDelete,
 }: {
   product: Product;
+  statusOf: (stock: number) => StockStatus;
   onDelete: (product: Product) => void;
 }) {
   return (
-    <article className="glass glass-hover flex flex-col overflow-hidden rounded-2xl">
+    <GlassCard hover className="flex flex-col overflow-hidden">
       <Link href={`/products/${product.id}`} className="block">
         <img
           src={product.thumbnail || FALLBACK_IMAGE}
           alt={product.title}
           loading="lazy"
-          className="h-40 w-full bg-white/50 object-cover"
+          className="h-36 w-full bg-white/[0.03] object-cover"
         />
       </Link>
-      <div className="flex flex-1 flex-col gap-2 p-4">
+      <div className="flex flex-1 flex-col gap-2 p-3.5">
         <div className="flex items-start justify-between gap-2">
-          <Link
-            href={`/products/${product.id}`}
-            className="line-clamp-1 font-semibold text-ink-900 transition hover:text-indigo-600"
-          >
-            {product.title}
-          </Link>
-          {isLocalId(product.id) ? <Badge tone="info">Local</Badge> : null}
+          <div className="min-w-0">
+            <Link
+              href={`/products/${product.id}`}
+              className="line-clamp-1 text-sm font-medium text-fg transition hover:text-brand"
+            >
+              {product.title}
+            </Link>
+            <p className="mt-0.5 line-clamp-1 text-[11px] capitalize text-fg-3">
+              {product.category}
+              {isLocalId(product.id) ? " · added locally" : ""}
+            </p>
+          </div>
+          <ProductRowMenu product={product} onDelete={onDelete} />
         </div>
-        <p className="text-xs capitalize text-ink-500">{product.category}</p>
+
         <div className="flex items-center justify-between">
-          <span className="font-semibold text-ink-900">
-            {formatCurrency(product.price)}
+          <span className="text-sm font-semibold text-fg tabular-nums">
+            {formatPrice(product.price)}
           </span>
           <RatingStars rating={product.rating} />
         </div>
-        <Badge tone={stockTone(product.stock)}>{product.stock} in stock</Badge>
-        <div className="mt-auto flex gap-2 pt-2">
-          <Link
-            href={`/products/${product.id}`}
-            className="flex-1 rounded-lg border border-white/60 bg-white/55 px-2.5 py-1.5 text-center text-xs font-medium text-ink-700 transition hover:bg-white/90"
-          >
-            View
-          </Link>
-          <Link
-            href={`/products/${product.id}/edit`}
-            className="flex-1 rounded-lg border border-white/60 bg-white/55 px-2.5 py-1.5 text-center text-xs font-medium text-ink-700 transition hover:bg-white/90"
-          >
-            Edit
-          </Link>
-          <button
-            type="button"
-            onClick={() => onDelete(product)}
-            className="flex-1 rounded-lg border border-rose-200/70 bg-rose-50/70 px-2.5 py-1.5 text-xs font-medium text-rose-600 transition hover:bg-rose-100"
-          >
-            Delete
-          </button>
+
+        <div className="mt-auto flex items-center justify-between pt-1">
+          <span className="text-[11px] text-fg-3">Stock: {product.stock}</span>
+          <StatusBadge status={statusOf(product.stock)} />
         </div>
       </div>
-    </article>
+    </GlassCard>
   );
 }

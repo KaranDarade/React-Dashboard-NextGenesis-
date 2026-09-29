@@ -3,11 +3,11 @@ import { cn } from "@/lib/format";
 type Tone = "neutral" | "success" | "warning" | "danger" | "info";
 
 const tones: Record<Tone, string> = {
-  neutral: "bg-white/60 text-ink-700",
-  success: "bg-emerald-100 text-emerald-700",
-  warning: "bg-amber-100 text-amber-700",
-  danger: "bg-rose-100 text-rose-700",
-  info: "bg-indigo-100 text-indigo-700",
+  neutral: "bg-white/[0.06] text-fg-2",
+  success: "bg-brand/10 text-brand",
+  warning: "bg-warn/10 text-warn",
+  danger: "bg-danger/10 text-danger",
+  info: "bg-info/10 text-info",
 };
 
 export function Badge({
@@ -22,7 +22,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+        "inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-medium",
         tones[tone],
         className,
       )}

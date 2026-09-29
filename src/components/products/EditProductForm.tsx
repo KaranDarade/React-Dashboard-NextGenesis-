@@ -59,10 +59,10 @@ export function EditProductForm({ id }: { id: string }) {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h2 className="text-lg font-semibold tracking-tight text-ink-900">
+        <h2 className="text-xl font-semibold tracking-tight text-fg">
           Edit product
         </h2>
-        <p className="mt-0.5 text-sm text-ink-500">
+        <p className="mt-0.5 text-sm text-fg-2">
           Updates are stored in this browser, not on the API.
         </p>
       </div>
