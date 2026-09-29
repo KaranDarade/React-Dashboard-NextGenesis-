@@ -28,9 +28,10 @@ Optional: copy `.env.example` to `.env.local` to change the API base URL. The
 app falls back to `https://dummyjson.com`, so it runs with no configuration.
 
 ```bash
-npm run build    # production build
-npm run start    # serve the production build
-npm run lint     # eslint
+npm run build      # production build
+npm run start      # serve the production build
+npm run lint       # eslint
+npm run typecheck  # tsc --noEmit
 ```
 
 ## Design direction
