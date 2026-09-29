@@ -25,7 +25,7 @@ export function ProductCard({
           src={product.thumbnail || FALLBACK_IMAGE}
           alt={product.title}
           loading="lazy"
-          className="h-36 w-full bg-white/[0.03] object-cover"
+          className="h-36 w-full bg-surface-1 object-cover"
         />
       </Link>
       <div className="flex flex-1 flex-col gap-2 p-3.5">

@@ -38,7 +38,7 @@ export function NavList({
                       collapsed && "justify-center px-0",
                       active
                         ? "bg-brand/10 font-medium text-fg ring-1 ring-brand/25"
-                        : "font-normal text-fg-2 hover:bg-white/[0.04] hover:text-fg",
+                        : "font-normal text-fg-2 hover:bg-surface-2 hover:text-fg",
                     )}
                   >
                     {active ? (

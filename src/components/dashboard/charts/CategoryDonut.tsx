@@ -43,7 +43,7 @@ export function CategoryDonut({
             cy="80"
             r={radius}
             fill="none"
-            stroke="rgba(255,255,255,0.05)"
+            stroke="var(--line)"
             strokeWidth="15"
           />
           {segments.map((segment) => (
@@ -86,7 +86,7 @@ export function CategoryDonut({
             onMouseLeave={() => setActive(null)}
             className={cn(
               "flex items-center justify-between gap-3 rounded-lg px-2 py-1 text-xs transition",
-              active === index ? "bg-white/[0.06]" : "",
+              active === index ? "bg-surface-2" : "",
             )}
           >
             <span className="flex min-w-0 items-center gap-2">

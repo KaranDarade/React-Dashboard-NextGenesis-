@@ -50,7 +50,7 @@ export function Pagination({
             value={limit}
             onChange={(event) => onLimitChange(Number(event.target.value))}
             aria-label="Products per page"
-            className="focus-brand rounded-lg border border-line bg-white/[0.04] px-2 py-1.5 text-xs text-fg outline-none transition hover:border-line-strong focus:border-brand/50"
+            className="focus-brand rounded-lg border border-line bg-surface-2 px-2 py-1.5 text-xs text-fg outline-none transition hover:border-line-strong focus:border-brand/50"
           >
             {PAGE_SIZE_OPTIONS.map((size) => (
               <option key={size} value={size} className="bg-canvas-soft">
@@ -69,7 +69,7 @@ export function Pagination({
           aria-label="Previous page"
           className={cn(
             buttonClass,
-            "border-line text-fg-2 hover:bg-white/[0.05] hover:text-fg",
+            "border-line text-fg-2 hover:bg-surface-2 hover:text-fg",
           )}
         >
           <ChevronLeftIcon className="h-4 w-4" />
@@ -90,7 +90,7 @@ export function Pagination({
                 buttonClass,
                 entry === page
                   ? "border-brand/30 bg-brand/12 text-brand"
-                  : "border-line text-fg-2 hover:bg-white/[0.05] hover:text-fg",
+                  : "border-line text-fg-2 hover:bg-surface-2 hover:text-fg",
               )}
             >
               {entry}
@@ -105,7 +105,7 @@ export function Pagination({
           aria-label="Next page"
           className={cn(
             buttonClass,
-            "border-line text-fg-2 hover:bg-white/[0.05] hover:text-fg",
+            "border-line text-fg-2 hover:bg-surface-2 hover:text-fg",
           )}
         >
           <ChevronRightIcon className="h-4 w-4" />

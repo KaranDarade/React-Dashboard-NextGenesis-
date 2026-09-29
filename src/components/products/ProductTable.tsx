@@ -35,7 +35,7 @@ export function ProductTable({
           {products.map((product) => (
             <tr
               key={String(product.id)}
-              className="border-t border-line transition hover:bg-white/[0.035]"
+              className="border-t border-line transition hover:bg-surface-1"
             >
               <td className="px-4 py-3">
                 <div className="flex items-center gap-3">
@@ -43,7 +43,7 @@ export function ProductTable({
                     src={product.thumbnail || FALLBACK_IMAGE}
                     alt={product.title}
                     loading="lazy"
-                    className="h-10 w-10 shrink-0 rounded-lg bg-white/[0.04] object-cover ring-1 ring-line"
+                    className="h-10 w-10 shrink-0 rounded-lg bg-surface-2 object-cover ring-1 ring-line"
                   />
                   <div className="min-w-0">
                     <Link

@@ -112,7 +112,7 @@ export function ProductDetail({ id }: { id: string }) {
         <div className="flex gap-2">
           <Link
             href={`/products/${product.id}/edit`}
-            className="focus-brand rounded-xl border border-line px-3.5 py-2 text-sm font-medium text-fg-2 transition hover:bg-white/[0.05] hover:text-fg"
+            className="focus-brand rounded-xl border border-line px-3.5 py-2 text-sm font-medium text-fg-2 transition hover:bg-surface-2 hover:text-fg"
           >
             Edit Product
           </Link>

@@ -27,7 +27,16 @@ export default function ProfilePage() {
   const { user, loading, error, retry } = useProfile();
   const { log } = useDashboardActivity();
 
-  const profile = user ?? stored;
+  const profile = user
+    ? {
+        ...user,
+        firstName: stored?.firstName ?? user.firstName,
+        lastName: stored?.lastName ?? user.lastName,
+        username: stored?.username ?? user.username,
+        email: stored?.email ?? user.email,
+        image: stored?.image ?? user.image,
+      }
+    : stored;
 
   const handleLogout = () => {
     log({ action: "Signed out", actor: profile?.firstName ?? "You" });
@@ -84,7 +93,7 @@ export default function ProfilePage() {
                 type="button"
                 onClick={retry}
                 disabled={loading}
-                className="focus-brand inline-flex items-center gap-2 rounded-xl border border-line px-3.5 py-2 text-sm font-medium text-fg-2 transition hover:bg-white/[0.05] hover:text-fg disabled:opacity-60"
+                className="focus-brand inline-flex items-center gap-2 rounded-xl border border-line px-3.5 py-2 text-sm font-medium text-fg-2 transition hover:bg-surface-2 hover:text-fg disabled:opacity-60"
               >
                 <RefreshIcon
                   className={cn("h-4 w-4", loading && "animate-spin")}

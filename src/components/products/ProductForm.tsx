@@ -86,7 +86,7 @@ function validate(values: FormValues): {
 }
 
 const fieldClass =
-  "focus-brand w-full rounded-xl border bg-white/[0.04] px-3 py-2.5 text-sm text-fg outline-none transition placeholder:text-fg-4 hover:border-line-strong focus:bg-white/[0.06]";
+  "focus-brand w-full rounded-xl border bg-surface-2 px-3 py-2.5 text-sm text-fg outline-none transition placeholder:text-fg-4 hover:border-line-strong focus:bg-surface-2";
 const fieldOk = "border-line focus:border-brand/50";
 const fieldBad = "border-danger/40 focus:border-danger/60";
 const labelClass = "text-xs font-medium text-fg-2";
@@ -246,7 +246,7 @@ export function ProductForm({
           type="button"
           onClick={onCancel}
           disabled={submitting}
-          className="focus-brand rounded-xl border border-line px-4 py-2 text-sm font-medium text-fg-2 transition hover:bg-white/[0.05] hover:text-fg disabled:opacity-50"
+          className="focus-brand rounded-xl border border-line px-4 py-2 text-sm font-medium text-fg-2 transition hover:bg-surface-2 hover:text-fg disabled:opacity-50"
         >
           Cancel
         </button>

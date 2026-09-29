@@ -7,7 +7,8 @@ glass design system.
 
 - Repository: https://github.com/KaranDarade/React-Dashboard-NextGenesis-
 - Live demo: https://react-dashboard-nextgenesis.vercel.app
-- Demo login: username `emilys`, password `emilyspass`
+- Admin login: username `daradekaran123@gmail.com`, password `KaranStore@123`
+  (the DummyJSON demo account `emilys` / `emilyspass` also works)
 
 ## Tech stack
 
@@ -49,6 +50,10 @@ A dark + emerald glass system ("StoreFlow"):
 - **Radius** cards 18px, panels 20px, buttons/inputs 12px; pill shapes reserved
   for status badges and filter chips.
 - **Icons** one consistent inline-SVG (Lucide-style) set at 16–18px.
+- **Light / dark theme** a toggle in the topbar (and in Settings) flips a
+  `data-theme` attribute on `<html>`; all colours are CSS variables, the choice
+  is persisted to `localStorage`, and an inline script applies it before paint
+  so there is no flash or hydration mismatch.
 
 ## Application surfaces
 
@@ -172,6 +177,14 @@ DummyJSON has no endpoint that searches and filters by category at once. Search
 wins: starting a search clears the category filter and vice versa. Search is the
 more explicit action, and filtering categories client-side would break correct
 server pagination totals.
+
+### Admin credentials
+
+DummyJSON only validates its own demo accounts, so the app accepts the admin
+credentials above locally and, for that sign-in, exchanges them for the demo
+account under the hood to obtain a real token. The UI then shows the admin
+identity ("Karan Darade"). This is a presentation/demo mapping, not a change to
+the API's authentication.
 
 ### Add / edit / delete are simulated locally
 

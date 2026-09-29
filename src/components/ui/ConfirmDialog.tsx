@@ -55,7 +55,7 @@ export function ConfirmDialog({
             type="button"
             onClick={onCancel}
             disabled={busy}
-            className="focus-brand rounded-xl border border-line px-4 py-2 text-sm font-medium text-fg-2 transition hover:bg-white/[0.05] hover:text-fg disabled:opacity-50"
+            className="focus-brand rounded-xl border border-line px-4 py-2 text-sm font-medium text-fg-2 transition hover:bg-surface-2 hover:text-fg disabled:opacity-50"
           >
             {cancelLabel}
           </button>

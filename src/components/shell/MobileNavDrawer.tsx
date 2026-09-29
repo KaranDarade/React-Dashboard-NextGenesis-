@@ -60,7 +60,7 @@ export function MobileNavDrawer({
             type="button"
             onClick={onClose}
             aria-label="Close navigation"
-            className="focus-brand grid h-9 w-9 place-items-center rounded-xl border border-line text-fg-2 transition hover:bg-white/[0.05] hover:text-fg"
+            className="focus-brand grid h-9 w-9 place-items-center rounded-xl border border-line text-fg-2 transition hover:bg-surface-2 hover:text-fg"
           >
             <XIcon className="h-4 w-4" />
           </button>
@@ -82,7 +82,7 @@ export function MobileNavDrawer({
           <Link
             href="/profile"
             onClick={onClose}
-            className="flex items-center gap-3 rounded-xl px-2 py-2 transition hover:bg-white/[0.04]"
+            className="flex items-center gap-3 rounded-xl px-2 py-2 transition hover:bg-surface-2"
           >
             {user?.image ? (
               <img

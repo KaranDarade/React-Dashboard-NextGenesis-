@@ -13,7 +13,7 @@ import type { Category } from "@/types/product";
 export type ProductView = "table" | "grid";
 
 const selectClass =
-  "focus-brand h-10 rounded-lg border border-line bg-white/[0.04] px-2.5 text-xs text-fg outline-none transition hover:border-line-strong focus:border-brand/50";
+  "focus-brand h-10 rounded-lg border border-line bg-surface-2 px-2.5 text-xs text-fg outline-none transition hover:border-line-strong focus:border-brand/50";
 
 export function ProductToolbar({
   search,
@@ -62,7 +62,7 @@ export function ProductToolbar({
           onChange={(event) => onSearch(event.target.value)}
           placeholder="Search products..."
           aria-label="Search products"
-          className="focus-brand h-10 w-full rounded-lg border border-line bg-white/[0.04] pl-9 pr-9 text-sm text-fg outline-none transition placeholder:text-fg-4 hover:border-line-strong focus:border-brand/50"
+          className="focus-brand h-10 w-full rounded-lg border border-line bg-surface-2 pl-9 pr-9 text-sm text-fg outline-none transition placeholder:text-fg-4 hover:border-line-strong focus:border-brand/50"
         />
         {searchLoading ? (
           <span className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 animate-spin rounded-full border-2 border-line-strong border-t-brand" />

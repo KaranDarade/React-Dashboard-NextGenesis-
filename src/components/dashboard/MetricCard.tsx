@@ -13,7 +13,7 @@ const toneIcon: Record<MetricTone, string> = {
   info: "bg-info/12 text-info",
   warn: "bg-warn/12 text-warn",
   danger: "bg-danger/12 text-danger",
-  neutral: "bg-white/[0.06] text-fg-2",
+  neutral: "bg-surface-2 text-fg-2",
 };
 
 const toneSpark: Record<MetricTone, string> = {
@@ -86,7 +86,7 @@ export function MetricCard({
                   "inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium tabular-nums",
                   direction === "up" && "bg-brand/10 text-brand",
                   direction === "down" && "bg-danger/10 text-danger",
-                  direction === "flat" && "bg-white/[0.06] text-fg-3",
+                  direction === "flat" && "bg-surface-2 text-fg-3",
                 )}
               >
                 {direction === "up" ? (

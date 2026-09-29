@@ -5,6 +5,11 @@ import { useState } from "react";
 import { StoreFlowMark } from "@/components/shell/icons";
 import { login } from "@/lib/api/auth";
 import { setSession } from "@/lib/auth";
+import {
+  ADMIN_CREDENTIALS,
+  ADMIN_IDENTITY,
+  isAdminCredentials,
+} from "@/lib/credentials";
 
 const HIGHLIGHTS = [
   "Live catalogue analytics from the DummyJSON API",
@@ -31,15 +36,17 @@ export default function LoginPage() {
 
     setSubmitting(true);
     try {
-      const data = await login(username.trim(), password);
+      const entered = username.trim();
+      const data = await login(entered, password);
+      const admin = isAdminCredentials(entered, password);
       setSession(data.accessToken, {
         id: data.id,
-        username: data.username,
-        email: data.email,
-        firstName: data.firstName,
-        lastName: data.lastName,
+        username: admin ? ADMIN_IDENTITY.username : data.username,
+        email: admin ? ADMIN_IDENTITY.email : data.email,
+        firstName: admin ? ADMIN_IDENTITY.firstName : data.firstName,
+        lastName: admin ? ADMIN_IDENTITY.lastName : data.lastName,
         gender: data.gender,
-        image: data.image,
+        image: admin ? "" : data.image,
       });
       router.replace("/");
     } catch (cause) {
@@ -52,14 +59,14 @@ export default function LoginPage() {
     }
   };
 
-  const fillDemo = () => {
-    setUsername("emilys");
-    setPassword("emilyspass");
+  const fillAdmin = () => {
+    setUsername(ADMIN_CREDENTIALS.username);
+    setPassword(ADMIN_CREDENTIALS.password);
     setError(null);
   };
 
   const fieldClass =
-    "focus-brand w-full rounded-xl border border-line bg-white/[0.04] px-3 py-2.5 text-sm text-fg outline-none transition placeholder:text-fg-4 hover:border-line-strong focus:border-brand/50 focus:bg-white/[0.06]";
+    "focus-brand w-full rounded-xl border border-line bg-surface-2 px-3 py-2.5 text-sm text-fg outline-none transition placeholder:text-fg-4 hover:border-line-strong focus:border-brand/50 focus:bg-surface-2";
 
   return (
     <main className="grid min-h-screen lg:grid-cols-2">
@@ -121,7 +128,7 @@ export default function LoginPage() {
                   onChange={(event) => setUsername(event.target.value)}
                   autoComplete="username"
                   className={fieldClass}
-                  placeholder="emilys"
+                  placeholder={ADMIN_CREDENTIALS.username}
                 />
               </label>
 
@@ -157,10 +164,10 @@ export default function LoginPage() {
 
             <button
               type="button"
-              onClick={fillDemo}
+              onClick={fillAdmin}
               className="mt-4 w-full text-center text-xs font-medium text-brand transition hover:text-brand-bright hover:underline"
             >
-              Use demo credentials (emilys / emilyspass)
+              Use admin credentials
             </button>
           </div>
         </div>

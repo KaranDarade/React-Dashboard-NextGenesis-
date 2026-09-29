@@ -7,6 +7,7 @@ import { Logo } from "@/components/shell/Logo";
 import { PlusIcon, SearchIcon } from "@/components/shell/icons";
 import { pageTitle } from "@/components/shell/nav";
 import { NotificationsMenu } from "@/components/shell/NotificationsMenu";
+import { ThemeToggle } from "@/components/shell/ThemeToggle";
 import { UserMenu } from "@/components/shell/UserMenu";
 
 export function Topbar() {
@@ -36,7 +37,7 @@ export function Topbar() {
         <Link
           href="/products"
           aria-label="Search products"
-          className="focus-brand grid h-10 w-10 place-items-center rounded-xl border border-line text-fg-2 transition hover:bg-white/[0.05] hover:text-fg sm:hidden"
+          className="focus-brand grid h-10 w-10 place-items-center rounded-xl border border-line text-fg-2 transition hover:bg-surface-2 hover:text-fg sm:hidden"
         >
           <SearchIcon className="h-[18px] w-[18px]" />
         </Link>
@@ -47,6 +48,7 @@ export function Topbar() {
           <PlusIcon className="h-4 w-4" />
           Add product
         </Link>
+        <ThemeToggle />
         <NotificationsMenu />
         <UserMenu />
       </div>

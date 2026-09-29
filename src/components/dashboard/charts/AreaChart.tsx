@@ -57,8 +57,8 @@ export function AreaChart({
       >
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#22c55e" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#22c55e" stopOpacity="0" />
+            <stop offset="0%" stopColor="var(--brand)" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="var(--brand)" stopOpacity="0" />
           </linearGradient>
         </defs>
 
@@ -69,7 +69,7 @@ export function AreaChart({
             x2={width - padX}
             y1={y}
             y2={y}
-            stroke="rgba(255,255,255,0.05)"
+            stroke="var(--line)"
             strokeWidth="1"
           />
         ))}
@@ -78,7 +78,7 @@ export function AreaChart({
         <path
           d={line}
           fill="none"
-          stroke="#22c55e"
+          stroke="var(--brand)"
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -93,7 +93,7 @@ export function AreaChart({
                   x2={coord[0]}
                   y1={padTop}
                   y2={padTop + innerH}
-                  stroke="rgba(255,255,255,0.15)"
+                  stroke="var(--line-strong)"
                 />
                 <circle cx={coord[0]} cy={coord[1]} r="4.5" fill="#4ade80" />
               </>

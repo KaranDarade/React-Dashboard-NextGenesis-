@@ -55,7 +55,7 @@ export function GreetingHeader() {
             "focus-brand inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-medium transition",
             autoRefresh
               ? "border-brand/30 bg-brand/10 text-brand"
-              : "border-line text-fg-2 hover:bg-white/[0.05]",
+              : "border-line text-fg-2 hover:bg-surface-2",
           )}
         >
           <span
@@ -70,7 +70,7 @@ export function GreetingHeader() {
           type="button"
           onClick={handleRefresh}
           disabled={refreshing}
-          className="focus-brand inline-flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-xs font-medium text-fg-2 transition hover:bg-white/[0.05] hover:text-fg disabled:opacity-60"
+          className="focus-brand inline-flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-xs font-medium text-fg-2 transition hover:bg-surface-2 hover:text-fg disabled:opacity-60"
         >
           <RefreshIcon className={cn("h-4 w-4", refreshing && "animate-spin")} />
           {refreshing ? "Syncing" : "Refresh"}

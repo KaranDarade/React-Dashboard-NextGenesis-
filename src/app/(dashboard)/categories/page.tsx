@@ -89,7 +89,7 @@ export default function CategoriesPage() {
                   </span>
                 </div>
 
-                <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/[0.05]">
+                <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-surface-2">
                   <div
                     className="h-full rounded-full bg-brand transition-all duration-500"
                     style={{ width: `${category.inStockPct}%` }}

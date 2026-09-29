@@ -45,13 +45,13 @@ export function RecentProducts() {
               <li key={String(product.id)}>
                 <Link
                   href={`/products/${product.id}`}
-                  className="focus-brand flex items-center gap-3 rounded-xl px-2 py-2.5 transition hover:bg-white/[0.035]"
+                  className="focus-brand flex items-center gap-3 rounded-xl px-2 py-2.5 transition hover:bg-surface-1"
                 >
                   <img
                     src={product.thumbnail || FALLBACK_IMAGE}
                     alt={product.title}
                     loading="lazy"
-                    className="h-9 w-9 shrink-0 rounded-lg bg-white/[0.04] object-cover ring-1 ring-line"
+                    className="h-9 w-9 shrink-0 rounded-lg bg-surface-2 object-cover ring-1 ring-line"
                   />
                   <div className="min-w-0 flex-1">
                     <p className="line-clamp-1 text-sm font-medium text-fg">

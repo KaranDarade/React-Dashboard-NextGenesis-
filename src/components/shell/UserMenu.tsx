@@ -32,7 +32,7 @@ export function UserMenu() {
         aria-label="Account menu"
         aria-haspopup="menu"
         aria-expanded={open}
-        className="focus-brand flex items-center gap-2 rounded-xl border border-line p-1 pr-2 transition hover:bg-white/[0.05]"
+        className="focus-brand flex items-center gap-2 rounded-xl border border-line p-1 pr-2 transition hover:bg-surface-2"
       >
         {user?.image ? (
           <img
@@ -66,7 +66,7 @@ export function UserMenu() {
             href="/profile"
             onClick={close}
             role="menuitem"
-            className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-fg-2 transition hover:bg-white/[0.05] hover:text-fg"
+            className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-fg-2 transition hover:bg-surface-2 hover:text-fg"
           >
             <UserIcon className="h-4 w-4" />
             View profile
@@ -75,7 +75,7 @@ export function UserMenu() {
             href="/settings"
             onClick={close}
             role="menuitem"
-            className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-fg-2 transition hover:bg-white/[0.05] hover:text-fg"
+            className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-fg-2 transition hover:bg-surface-2 hover:text-fg"
           >
             Settings
           </Link>

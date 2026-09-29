@@ -32,7 +32,7 @@ export function ProductRowMenu({
         aria-label={`Actions for ${product.title}`}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="focus-brand grid h-8 w-8 place-items-center rounded-lg border border-transparent text-fg-3 transition hover:border-line hover:bg-white/[0.05] hover:text-fg"
+        className="focus-brand grid h-8 w-8 place-items-center rounded-lg border border-transparent text-fg-3 transition hover:border-line hover:bg-surface-2 hover:text-fg"
       >
         <MoreHorizontalIcon className="h-4 w-4" />
       </button>
@@ -48,7 +48,7 @@ export function ProductRowMenu({
             href={`/products/${product.id}`}
             onClick={close}
             role="menuitem"
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-fg-2 transition hover:bg-white/[0.06] hover:text-fg"
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-fg-2 transition hover:bg-surface-2 hover:text-fg"
           >
             <EyeIcon className="h-4 w-4" />
             View
@@ -57,7 +57,7 @@ export function ProductRowMenu({
             href={`/products/${product.id}/edit`}
             onClick={close}
             role="menuitem"
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-fg-2 transition hover:bg-white/[0.06] hover:text-fg"
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-fg-2 transition hover:bg-surface-2 hover:text-fg"
           >
             <PencilIcon className="h-4 w-4" />
             Edit

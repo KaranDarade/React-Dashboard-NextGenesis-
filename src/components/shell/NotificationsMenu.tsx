@@ -61,7 +61,7 @@ export function NotificationsMenu() {
         type="button"
         onClick={() => setOpen((value) => !value)}
         aria-label="Notifications"
-        className="focus-brand relative grid h-10 w-10 place-items-center rounded-xl border border-line text-fg-2 transition hover:bg-white/[0.05] hover:text-fg"
+        className="focus-brand relative grid h-10 w-10 place-items-center rounded-xl border border-line text-fg-2 transition hover:bg-surface-2 hover:text-fg"
       >
         <BellIcon className="h-[18px] w-[18px]" />
         {alerts.length > 0 ? (
@@ -87,7 +87,7 @@ export function NotificationsMenu() {
                   <Link
                     href={alert.href}
                     onClick={close}
-                    className="flex items-start gap-3 rounded-xl px-3 py-2.5 transition hover:bg-white/[0.05]"
+                    className="flex items-start gap-3 rounded-xl px-3 py-2.5 transition hover:bg-surface-2"
                   >
                     <span
                       className={cn(

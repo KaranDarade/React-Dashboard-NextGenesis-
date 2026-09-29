@@ -275,7 +275,7 @@ export function ProductsBrowser() {
                   page: 1,
                 })
               }
-              className="focus-brand rounded-xl border border-line px-4 py-2 text-sm font-medium text-fg-2 transition hover:bg-white/[0.05] hover:text-fg"
+              className="focus-brand rounded-xl border border-line px-4 py-2 text-sm font-medium text-fg-2 transition hover:bg-surface-2 hover:text-fg"
             >
               Clear filters
             </button>

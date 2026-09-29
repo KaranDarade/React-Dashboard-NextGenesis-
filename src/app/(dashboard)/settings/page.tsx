@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { ConnectionBadge } from "@/components/dashboard/ConnectionBadge";
-import { RefreshIcon, TrashIcon } from "@/components/shell/icons";
+import { MoonIcon, RefreshIcon, SunIcon, TrashIcon } from "@/components/shell/icons";
+import { useTheme } from "@/hooks/useTheme";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { useNow } from "@/hooks/useNow";
@@ -36,7 +37,7 @@ function Toggle({
       onClick={() => onChange(!checked)}
       className={cn(
         "focus-brand relative h-6 w-11 shrink-0 rounded-full transition",
-        checked ? "bg-brand" : "bg-white/[0.12]",
+        checked ? "bg-brand" : "bg-surface-3",
       )}
     >
       <span
@@ -89,6 +90,7 @@ export default function SettingsPage() {
   );
   const [confirmClear, setConfirmClear] = useState(false);
   const now = useNow(10000);
+  const { theme, setTheme } = useTheme();
 
   const localChanges =
     state.created.length +
@@ -146,7 +148,7 @@ export default function SettingsPage() {
             type="button"
             onClick={refresh}
             disabled={refreshing}
-            className="focus-brand mt-4 inline-flex items-center gap-2 rounded-xl border border-line px-3.5 py-2 text-sm font-medium text-fg-2 transition hover:bg-white/[0.05] hover:text-fg disabled:opacity-60"
+            className="focus-brand mt-4 inline-flex items-center gap-2 rounded-xl border border-line px-3.5 py-2 text-sm font-medium text-fg-2 transition hover:bg-surface-2 hover:text-fg disabled:opacity-60"
           >
             <RefreshIcon
               className={cn("h-4 w-4", refreshing && "animate-spin")}
@@ -169,7 +171,7 @@ export default function SettingsPage() {
                 value={threshold}
                 onChange={(event) => setThreshold(Number(event.target.value))}
                 aria-label="Low-stock threshold"
-                className="focus-brand rounded-xl border border-line bg-white/[0.04] px-3 py-2 text-sm text-fg outline-none transition hover:border-line-strong focus:border-brand/50"
+                className="focus-brand rounded-xl border border-line bg-surface-2 px-3 py-2 text-sm text-fg outline-none transition hover:border-line-strong focus:border-brand/50"
               >
                 {THRESHOLD_OPTIONS.map((option) => (
                   <option key={option} value={option} className="bg-canvas-soft">
@@ -185,6 +187,47 @@ export default function SettingsPage() {
               <span className="text-xs text-fg-2">
                 In · Low · Out
               </span>
+            </Row>
+          </div>
+        </GlassCard>
+
+        <GlassCard className="p-5">
+          <h3 className="text-sm font-semibold text-fg">Appearance</h3>
+          <p className="mt-0.5 text-xs text-fg-3">
+            Pick the interface theme. Your choice is remembered.
+          </p>
+          <div className="mt-3">
+            <Row title="Theme" description="Light or dark interface">
+              <div className="flex items-center gap-1 rounded-xl border border-line p-1">
+                <button
+                  type="button"
+                  onClick={() => setTheme("light")}
+                  aria-pressed={theme === "light"}
+                  className={cn(
+                    "focus-brand inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition",
+                    theme === "light"
+                      ? "bg-brand/12 text-brand"
+                      : "text-fg-3 hover:text-fg",
+                  )}
+                >
+                  <SunIcon className="h-3.5 w-3.5" />
+                  Light
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTheme("dark")}
+                  aria-pressed={theme === "dark"}
+                  className={cn(
+                    "focus-brand inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition",
+                    theme === "dark"
+                      ? "bg-brand/12 text-brand"
+                      : "text-fg-3 hover:text-fg",
+                  )}
+                >
+                  <MoonIcon className="h-3.5 w-3.5" />
+                  Dark
+                </button>
+              </div>
             </Row>
           </div>
         </GlassCard>
@@ -227,7 +270,7 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={clearActivity}
-                className="focus-brand rounded-xl border border-line px-3 py-2 text-xs font-medium text-fg-2 transition hover:bg-white/[0.05] hover:text-fg"
+                className="focus-brand rounded-xl border border-line px-3 py-2 text-xs font-medium text-fg-2 transition hover:bg-surface-2 hover:text-fg"
               >
                 Clear log
               </button>

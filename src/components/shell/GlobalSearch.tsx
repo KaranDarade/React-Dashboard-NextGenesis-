@@ -45,9 +45,9 @@ export function GlobalSearch({ className }: { className?: string }) {
         onChange={(event) => setValue(event.target.value)}
         placeholder="Search products, categories..."
         aria-label="Search products"
-        className="focus-brand w-48 rounded-xl border border-line bg-white/[0.04] py-2 pl-9 pr-14 text-sm text-fg outline-none transition placeholder:text-fg-4 hover:border-line-strong focus:border-brand/50 focus:bg-white/[0.06] lg:w-64"
+        className="focus-brand w-48 rounded-xl border border-line bg-surface-2 py-2 pl-9 pr-14 text-sm text-fg outline-none transition placeholder:text-fg-4 hover:border-line-strong focus:border-brand/50 focus:bg-surface-2 lg:w-64"
       />
-      <kbd className="pointer-events-none absolute right-2.5 top-1/2 hidden -translate-y-1/2 rounded-md border border-line bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-medium text-fg-3 lg:block">
+      <kbd className="pointer-events-none absolute right-2.5 top-1/2 hidden -translate-y-1/2 rounded-md border border-line bg-surface-2 px-1.5 py-0.5 text-[10px] font-medium text-fg-3 lg:block">
         ⌘ K
       </kbd>
     </form>

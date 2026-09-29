@@ -56,7 +56,7 @@ export function Sidebar({
         <div
           className={cn(
             "mb-2 flex items-center gap-3 rounded-xl px-2 py-2",
-            collapsed ? "justify-center px-0" : "bg-white/[0.03]",
+            collapsed ? "justify-center px-0" : "bg-surface-1",
           )}
         >
           {user?.image ? (
@@ -97,7 +97,7 @@ export function Sidebar({
           onClick={onToggle}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           className={cn(
-            "focus-brand flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-fg-3 transition hover:bg-white/[0.04] hover:text-fg-2",
+            "focus-brand flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-fg-3 transition hover:bg-surface-2 hover:text-fg-2",
             collapsed && "justify-center px-0",
           )}
         >

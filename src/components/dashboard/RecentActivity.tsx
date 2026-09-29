@@ -22,7 +22,7 @@ function ActivityItem({ event, now }: { event: ActivityEvent; now: number }) {
   const item = visual[event.status];
   const Icon = item.Icon;
   return (
-    <li className="flex items-start gap-3 rounded-xl px-2 py-2 transition hover:bg-white/[0.035]">
+    <li className="flex items-start gap-3 rounded-xl px-2 py-2 transition hover:bg-surface-1">
       <span
         className={cn(
           "mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg",

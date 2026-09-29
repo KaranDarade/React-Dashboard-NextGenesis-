@@ -27,7 +27,7 @@ export function BarList({
               {item.display}
             </span>
           </div>
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/[0.05]">
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-2">
             <div
               className="h-full rounded-full transition-all duration-500"
               style={{

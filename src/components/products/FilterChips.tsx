@@ -18,7 +18,7 @@ export function FilterChips({ chips }: { chips: FilterChip[] }) {
           key={chip.key}
           type="button"
           onClick={chip.onRemove}
-          className="focus-brand group inline-flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-white/[0.04] py-1 pl-3 pr-2 text-[11px] font-medium text-fg-2 transition hover:border-brand/40 hover:text-fg"
+          className="focus-brand group inline-flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-surface-2 py-1 pl-3 pr-2 text-[11px] font-medium text-fg-2 transition hover:border-brand/40 hover:text-fg"
         >
           {chip.label}
           <XIcon className="h-3 w-3 text-fg-3 transition group-hover:text-danger" />
