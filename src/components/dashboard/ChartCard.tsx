@@ -19,14 +19,14 @@ export function ChartCard({
 }) {
   return (
     <GlassCard
-      className={cn("flex flex-col p-5 chart-rise", className)}
+      className={cn("flex flex-col p-5 rise", className)}
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-ink-900">{title}</h3>
+          <h3 className="text-sm font-semibold text-fg">{title}</h3>
           {subtitle ? (
-            <p className="mt-0.5 text-xs text-ink-500">{subtitle}</p>
+            <p className="mt-0.5 text-xs text-fg-3">{subtitle}</p>
           ) : null}
         </div>
         {action}

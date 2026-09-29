@@ -35,16 +35,16 @@ export function CategoryDonut({
   const shown = active === null ? null : data[active];
 
   return (
-    <div className="flex flex-col items-center gap-5 sm:flex-row sm:gap-6">
-      <div className="relative h-44 w-44 shrink-0">
+    <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
+      <div className="relative h-40 w-40 shrink-0">
         <svg viewBox="0 0 160 160" className="h-full w-full -rotate-90">
           <circle
             cx="80"
             cy="80"
             r={radius}
             fill="none"
-            stroke="rgba(148,163,184,0.18)"
-            strokeWidth="16"
+            stroke="rgba(255,255,255,0.05)"
+            strokeWidth="15"
           />
           {segments.map((segment) => (
             <circle
@@ -54,13 +54,12 @@ export function CategoryDonut({
               r={radius}
               fill="none"
               stroke={segment.color}
-              strokeWidth={active === segment.index ? 19 : 15}
+              strokeWidth={active === segment.index ? 18 : 14}
               strokeDasharray={`${segment.dash} ${circumference - segment.dash}`}
               strokeDashoffset={-segment.offset}
               className="cursor-pointer transition-all duration-200"
               style={{
-                opacity:
-                  active === null || active === segment.index ? 1 : 0.3,
+                opacity: active === null || active === segment.index ? 1 : 0.28,
               }}
               onMouseEnter={() => setActive(segment.index)}
               onMouseLeave={() => setActive(null)}
@@ -69,10 +68,10 @@ export function CategoryDonut({
         </svg>
         <div className="pointer-events-none absolute inset-0 grid place-items-center text-center">
           <div>
-            <p className="text-2xl font-semibold tabular-nums text-ink-900">
+            <p className="text-2xl font-semibold text-fg tabular-nums">
               {shown ? shown.value : total}
             </p>
-            <p className="max-w-[7rem] truncate text-[11px] capitalize text-ink-500">
+            <p className="max-w-[7rem] truncate text-[11px] capitalize text-fg-3">
               {shown ? shown.label : totalLabel}
             </p>
           </div>
@@ -87,7 +86,7 @@ export function CategoryDonut({
             onMouseLeave={() => setActive(null)}
             className={cn(
               "flex items-center justify-between gap-3 rounded-lg px-2 py-1 text-xs transition",
-              active === index ? "bg-white/70" : "",
+              active === index ? "bg-white/[0.06]" : "",
             )}
           >
             <span className="flex min-w-0 items-center gap-2">
@@ -95,11 +94,11 @@ export function CategoryDonut({
                 className="h-2.5 w-2.5 shrink-0 rounded-full"
                 style={{ background: slice.color }}
               />
-              <span className="truncate capitalize text-ink-700">
+              <span className="truncate capitalize text-fg-2">
                 {slice.label}
               </span>
             </span>
-            <span className="shrink-0 tabular-nums text-ink-500">
+            <span className="shrink-0 text-fg-3 tabular-nums">
               {Math.round((slice.value / total) * 100)}%
             </span>
           </li>

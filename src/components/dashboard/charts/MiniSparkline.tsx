@@ -5,7 +5,7 @@ import { useId } from "react";
 export function MiniSparkline({
   values,
   className,
-  stroke = "#6366f1",
+  stroke = "#22c55e",
 }: {
   values: number[];
   className?: string;

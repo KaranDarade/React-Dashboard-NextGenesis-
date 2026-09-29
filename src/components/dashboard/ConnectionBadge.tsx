@@ -2,17 +2,17 @@ import { cn } from "@/lib/format";
 import { CONNECTION_LABEL, type ConnectionStatus } from "@/lib/system";
 
 const toneBg: Record<ConnectionStatus, string> = {
-  operational: "bg-emerald-50 text-emerald-700",
-  syncing: "bg-sky-50 text-sky-700",
-  degraded: "bg-amber-50 text-amber-700",
-  offline: "bg-rose-50 text-rose-700",
+  operational: "bg-brand/10 text-brand",
+  syncing: "bg-info/10 text-info",
+  degraded: "bg-warn/10 text-warn",
+  offline: "bg-danger/10 text-danger",
 };
 
 const dotTone: Record<ConnectionStatus, string> = {
-  operational: "bg-emerald-500",
-  syncing: "bg-sky-500",
-  degraded: "bg-amber-500",
-  offline: "bg-rose-500",
+  operational: "bg-brand",
+  syncing: "bg-info",
+  degraded: "bg-warn",
+  offline: "bg-danger",
 };
 
 export function ConnectionBadge({
