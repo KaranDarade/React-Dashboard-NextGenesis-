@@ -137,6 +137,7 @@ export const CATALOG_SELECT = [
   "brand",
   "availabilityStatus",
   "thumbnail",
+  "meta",
 ].join(",");
 
 export interface CatalogSnapshot {

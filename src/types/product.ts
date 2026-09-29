@@ -27,6 +27,12 @@ export interface Product {
   images?: string[];
   thumbnail: string;
   reviews?: Review[];
+  meta?: {
+    createdAt?: string;
+    updatedAt?: string;
+    barcode?: string;
+    qrCode?: string;
+  };
 }
 
 export interface ProductsResponse {

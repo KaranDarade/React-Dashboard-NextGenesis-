@@ -10,6 +10,14 @@ export const OVERRIDES_STORAGE_KEY = "ng_product_overrides_v1";
 export const PAGE_SIZE_OPTIONS = [10, 20, 50] as const;
 export const DEFAULT_PAGE_SIZE = 10;
 export const DEBOUNCE_MS = 500;
+export const STOCK_LOW_THRESHOLD = 20;
+
+export const STORAGE_KEYS = {
+  sidebarCollapsed: "ng_sidebar_collapsed",
+  autoRefresh: "ng_auto_refresh",
+  lowStockThreshold: "ng_low_stock_threshold",
+  productView: "ng_products_view",
+} as const;
 
 export interface SortOption {
   value: string;

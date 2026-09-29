@@ -9,20 +9,19 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "NextGenesis Control",
+  title: "StoreFlow — Product Management",
   description:
-    "A modern product analytics dashboard for the DummyJSON catalogue.",
+    "A premium product management dashboard for the DummyJSON catalogue.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={inter.variable}>
       <body className="min-h-screen">
-        <div className="aurora-scene" aria-hidden>
-          <div className="aurora-blob aurora-blob-1" />
-          <div className="aurora-blob aurora-blob-2" />
-          <div className="aurora-blob aurora-blob-3" />
-          <div className="aurora-grid" />
+        <div className="ambient" aria-hidden>
+          <div className="ambient-glow ambient-glow-a" />
+          <div className="ambient-glow ambient-glow-b" />
+          <div className="ambient-lines" />
         </div>
         {children}
       </body>

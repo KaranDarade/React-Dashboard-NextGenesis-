@@ -1,12 +1,16 @@
+/**
+ * Muted, product-appropriate chart palette with emerald as the primary accent.
+ * Most categories read as soft neutrals so the accent stays valuable.
+ */
 export const CHART_COLORS = [
-  "#6366f1",
-  "#06b6d4",
-  "#8b5cf6",
   "#22c55e",
-  "#f59e0b",
-  "#ec4899",
-  "#14b8a6",
-  "#f97316",
+  "#4ade80",
+  "#A7B8AD",
+  "#64746A",
+  "#3F4A43",
+  "#064e3b",
+  "#60a5fa",
+  "#fbbf24",
 ];
 
 export function colorAt(index: number): string {

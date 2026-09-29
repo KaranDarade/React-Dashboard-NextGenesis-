@@ -21,12 +21,15 @@ type Action =
   | { type: "hydrate"; state: OverridesState }
   | { type: "add"; product: Product }
   | { type: "update"; id: Product["id"]; patch: Partial<Product> }
-  | { type: "delete"; id: Product["id"] };
+  | { type: "delete"; id: Product["id"] }
+  | { type: "clear" };
 
 function reducer(state: OverridesState, action: Action): OverridesState {
   switch (action.type) {
     case "hydrate":
       return action.state;
+    case "clear":
+      return emptyOverrides;
     case "add": {
       const id = keyOf(action.product.id);
       return {
@@ -77,6 +80,7 @@ interface ProductOverridesValue {
   addLocal: (product: Product) => void;
   updateLocal: (id: Product["id"], patch: Partial<Product>) => void;
   deleteLocal: (id: Product["id"]) => void;
+  clearLocal: () => void;
 }
 
 const ProductOverridesContext = createContext<ProductOverridesValue | null>(
@@ -138,10 +142,11 @@ export function ProductOverridesProvider({
     (id: Product["id"]) => dispatch({ type: "delete", id }),
     [],
   );
+  const clearLocal = useCallback(() => dispatch({ type: "clear" }), []);
 
   const value = useMemo<ProductOverridesValue>(
-    () => ({ state, addLocal, updateLocal, deleteLocal }),
-    [state, addLocal, updateLocal, deleteLocal],
+    () => ({ state, addLocal, updateLocal, deleteLocal, clearLocal }),
+    [state, addLocal, updateLocal, deleteLocal, clearLocal],
   );
 
   return (

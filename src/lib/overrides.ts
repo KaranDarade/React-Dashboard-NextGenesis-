@@ -80,5 +80,6 @@ export function makeLocalProduct(input: ProductInput): Product {
     thumbnail: thumbnail || "",
     images: thumbnail ? [thumbnail] : [],
     reviews: [],
+    meta: { createdAt: new Date().toISOString() },
   };
 }
