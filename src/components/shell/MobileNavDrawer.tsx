@@ -1,9 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogOutIcon, XIcon } from "@/components/shell/icons";
-import { Logo } from "@/components/shell/Logo";
+import { LogOutIcon, PlusIcon, UserIcon, XIcon } from "@/components/shell/icons";
+import { Logo, Wordmark } from "@/components/shell/Logo";
 import { NavList } from "@/components/shell/NavList";
 import { useStoredUser } from "@/hooks/useStoredUser";
 import { clearSession } from "@/lib/auth";
@@ -24,7 +25,7 @@ export function MobileNavDrawer({
   const { log } = useDashboardActivity();
 
   const handleLogout = () => {
-    log({ action: "Signed out", status: "info" });
+    log({ action: "Signed out" });
     clearSession();
     router.replace("/login");
   };
@@ -39,32 +40,27 @@ export function MobileNavDrawer({
     >
       <div
         className={cn(
-          "absolute inset-0 bg-ink-950/40 backdrop-blur-sm transition-opacity duration-300",
+          "absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300",
           open ? "opacity-100" : "opacity-0",
         )}
         onClick={onClose}
       />
       <aside
         className={cn(
-          "glass-strong absolute inset-y-0 left-0 flex w-[280px] max-w-[85vw] flex-col border-y-0 border-l-0 transition-transform duration-300 ease-out",
+          "glass-strong absolute inset-y-0 left-0 flex w-[280px] max-w-[84vw] flex-col border-y-0 border-l-0 border-r border-line-strong transition-transform duration-300 ease-out",
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="flex items-center justify-between px-5 py-5">
           <div className="flex items-center gap-3">
             <Logo />
-            <div>
-              <p className="text-sm font-semibold tracking-tight text-ink-900">
-                NextGenesis
-              </p>
-              <p className="text-[11px] text-ink-500">Control centre</p>
-            </div>
+            <Wordmark />
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close navigation"
-            className="grid h-9 w-9 place-items-center rounded-xl border border-white/60 bg-white/50 text-ink-700 transition hover:bg-white/80"
+            className="focus-brand grid h-9 w-9 place-items-center rounded-xl border border-line text-fg-2 transition hover:bg-white/[0.05] hover:text-fg"
           >
             <XIcon className="h-4 w-4" />
           </button>
@@ -74,31 +70,47 @@ export function MobileNavDrawer({
           <NavList pathname={pathname} onNavigate={onClose} />
         </div>
 
-        <div className="border-t border-white/50 p-3">
-          {user ? (
-            <div className="mb-2 flex items-center gap-3 rounded-xl bg-white/50 p-2">
+        <div className="flex flex-col gap-2 border-t border-line p-3">
+          <Link
+            href="/products/new"
+            onClick={onClose}
+            className="focus-brand flex items-center justify-center gap-2 rounded-xl bg-brand px-3 py-2.5 text-sm font-medium text-brand-darker transition hover:bg-brand-bright"
+          >
+            <PlusIcon className="h-4 w-4" />
+            Add product
+          </Link>
+          <Link
+            href="/profile"
+            onClick={onClose}
+            className="flex items-center gap-3 rounded-xl px-2 py-2 transition hover:bg-white/[0.04]"
+          >
+            {user?.image ? (
               <img
                 src={user.image}
                 alt=""
-                className="h-8 w-8 rounded-full ring-1 ring-white/70"
+                className="h-8 w-8 rounded-full object-cover ring-1 ring-line-strong"
               />
-              <div className="min-w-0">
-                <p className="truncate text-xs font-semibold text-ink-900">
-                  {user.firstName} {user.lastName}
-                </p>
-                <p className="truncate text-[11px] text-ink-500">
-                  {user.email}
-                </p>
-              </div>
-            </div>
-          ) : null}
+            ) : (
+              <span className="grid h-8 w-8 place-items-center rounded-full bg-brand/15 text-[11px] font-semibold text-brand">
+                <UserIcon className="h-4 w-4" />
+              </span>
+            )}
+            <span className="min-w-0">
+              <span className="block truncate text-xs font-medium text-fg">
+                {user ? `${user.firstName} ${user.lastName}` : "Profile"}
+              </span>
+              <span className="block truncate text-[11px] text-fg-3">
+                Admin
+              </span>
+            </span>
+          </Link>
           <button
             type="button"
             onClick={handleLogout}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/60 px-3 py-2.5 text-sm font-medium text-rose-600 transition hover:bg-rose-50"
+            className="focus-brand flex items-center justify-center gap-2 rounded-xl border border-line px-3 py-2.5 text-sm font-medium text-fg-2 transition hover:bg-danger/10 hover:text-danger"
           >
             <LogOutIcon className="h-4 w-4" />
-            Sign out
+            Logout
           </button>
         </div>
       </aside>

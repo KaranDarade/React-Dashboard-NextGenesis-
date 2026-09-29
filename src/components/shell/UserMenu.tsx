@@ -18,12 +18,8 @@ export function UserMenu() {
   const close = useCallback(() => setOpen(false), []);
   const ref = useClickOutside<HTMLDivElement>(close);
 
-  const initials = user
-    ? `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase()
-    : "NG";
-
   const handleLogout = () => {
-    log({ action: "Signed out", status: "info" });
+    log({ action: "Signed out" });
     clearSession();
     router.replace("/login");
   };
@@ -33,61 +29,64 @@ export function UserMenu() {
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className="flex items-center gap-2 rounded-xl border border-white/60 bg-white/55 py-1.5 pl-1.5 pr-2.5 text-left shadow-sm transition hover:bg-white/80"
+        aria-label="Account menu"
         aria-haspopup="menu"
         aria-expanded={open}
+        className="focus-brand flex items-center gap-2 rounded-xl border border-line p-1 pr-2 transition hover:bg-white/[0.05]"
       >
         {user?.image ? (
           <img
             src={user.image}
             alt=""
-            className="h-7 w-7 rounded-lg ring-1 ring-white/70"
+            className="h-8 w-8 rounded-lg object-cover ring-1 ring-line-strong"
           />
         ) : (
-          <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-to-br from-indigo-500 to-cyan-400 text-[11px] font-semibold text-white">
-            {initials}
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand/15 text-brand">
+            <UserIcon className="h-4 w-4" />
           </span>
         )}
-        <span className="hidden min-w-0 leading-tight sm:block">
-          <span className="block truncate text-xs font-semibold text-ink-900">
-            {user ? `${user.firstName} ${user.lastName}` : "Guest"}
-          </span>
-          <span className="block truncate text-[10px] text-ink-500">
-            {user?.email ?? "Not signed in"}
-          </span>
-        </span>
-        <ChevronDownIcon className="h-3.5 w-3.5 text-ink-500" />
+        <ChevronDownIcon className="hidden h-3.5 w-3.5 text-fg-3 sm:block" />
       </button>
 
       {open ? (
         <div
           role="menu"
-          className="glass-float absolute right-0 top-[calc(100%+10px)] z-50 w-60 rounded-2xl p-2 chart-rise"
+          className="glass-float pop absolute right-0 top-[calc(100%+10px)] z-50 w-56 rounded-2xl p-2"
         >
           <div className="px-3 py-2">
-            <p className="text-xs text-ink-500">Signed in as</p>
-            <p className="truncate text-sm font-semibold text-ink-900">
-              {user?.username ?? "guest"}
+            <p className="truncate text-sm font-medium text-fg">
+              {user ? `${user.firstName} ${user.lastName}` : "Signed in"}
+            </p>
+            <p className="truncate text-[11px] text-fg-3">
+              {user?.email ?? "—"}
             </p>
           </div>
-          <div className="my-1 h-px bg-white/60" />
+          <div className="my-1 h-px bg-line" />
           <Link
             href="/profile"
             onClick={close}
             role="menuitem"
-            className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-ink-700 transition hover:bg-white/60 hover:text-ink-900"
+            className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-fg-2 transition hover:bg-white/[0.05] hover:text-fg"
           >
             <UserIcon className="h-4 w-4" />
             View profile
+          </Link>
+          <Link
+            href="/settings"
+            onClick={close}
+            role="menuitem"
+            className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-fg-2 transition hover:bg-white/[0.05] hover:text-fg"
+          >
+            Settings
           </Link>
           <button
             type="button"
             role="menuitem"
             onClick={handleLogout}
-            className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-rose-600 transition hover:bg-rose-50"
+            className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-fg-2 transition hover:bg-danger/10 hover:text-danger"
           >
             <LogOutIcon className="h-4 w-4" />
-            Sign out
+            Logout
           </button>
         </div>
       ) : null}

@@ -1,10 +1,10 @@
 import type { ComponentType, SVGProps } from "react";
 import {
+  BarChartIcon,
   BoxIcon,
-  HomeIcon,
-  PlusIcon,
+  DashboardIcon,
+  SettingsIcon,
   TagIcon,
-  UserIcon,
 } from "@/components/shell/icons";
 
 export interface NavItem {
@@ -21,19 +21,14 @@ export interface NavSection {
 
 export const NAV_SECTIONS: NavSection[] = [
   {
-    title: "General",
+    title: "Workspace",
     items: [
       {
         href: "/",
-        label: "Overview",
-        icon: HomeIcon,
+        label: "Dashboard",
+        icon: DashboardIcon,
         isActive: (pathname) => pathname === "/",
       },
-    ],
-  },
-  {
-    title: "Catalogue",
-    items: [
       {
         href: "/products",
         label: "Products",
@@ -50,35 +45,36 @@ export const NAV_SECTIONS: NavSection[] = [
         isActive: (pathname) => pathname.startsWith("/categories"),
       },
       {
-        href: "/products/new",
-        label: "Add product",
-        icon: PlusIcon,
-        isActive: (pathname) => pathname.startsWith("/products/new"),
+        href: "/analytics",
+        label: "Analytics",
+        icon: BarChartIcon,
+        isActive: (pathname) => pathname.startsWith("/analytics"),
       },
-    ],
-  },
-  {
-    title: "Account",
-    items: [
       {
-        href: "/profile",
-        label: "Profile",
-        icon: UserIcon,
-        isActive: (pathname) => pathname.startsWith("/profile"),
+        href: "/settings",
+        label: "Settings",
+        icon: SettingsIcon,
+        isActive: (pathname) => pathname.startsWith("/settings"),
       },
     ],
   },
 ];
 
-export const PAGE_TITLES: Array<{ match: (pathname: string) => boolean; title: string }> = [
-  { match: (p) => p === "/", title: "Overview" },
-  { match: (p) => p.startsWith("/products/new"), title: "Add product" },
-  { match: (p) => p.endsWith("/edit"), title: "Edit product" },
-  { match: (p) => /^\/products\/[^/]+$/.test(p) && p !== "/products", title: "Product details" },
-  { match: (p) => p.startsWith("/products"), title: "Products" },
-  { match: (p) => p.startsWith("/categories"), title: "Categories" },
-  { match: (p) => p.startsWith("/profile"), title: "Profile" },
-];
+const PAGE_TITLES: Array<{ match: (pathname: string) => boolean; title: string }> =
+  [
+    { match: (p) => p === "/", title: "Dashboard" },
+    { match: (p) => p.startsWith("/products/new"), title: "Add product" },
+    { match: (p) => p.endsWith("/edit"), title: "Edit product" },
+    {
+      match: (p) => /^\/products\/[^/]+$/.test(p) && p !== "/products",
+      title: "Product details",
+    },
+    { match: (p) => p.startsWith("/products"), title: "Products" },
+    { match: (p) => p.startsWith("/categories"), title: "Categories" },
+    { match: (p) => p.startsWith("/analytics"), title: "Analytics" },
+    { match: (p) => p.startsWith("/settings"), title: "Settings" },
+    { match: (p) => p.startsWith("/profile"), title: "Profile" },
+  ];
 
 export function pageTitle(pathname: string): string {
   return PAGE_TITLES.find((entry) => entry.match(pathname))?.title ?? "Dashboard";

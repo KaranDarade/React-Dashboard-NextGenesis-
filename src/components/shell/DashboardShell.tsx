@@ -2,12 +2,13 @@
 
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { DemoBanner } from "@/components/layout/DemoBanner";
+import { BottomNav } from "@/components/shell/BottomNav";
 import { MobileNavDrawer } from "@/components/shell/MobileNavDrawer";
 import { Sidebar } from "@/components/shell/Sidebar";
 import { Topbar } from "@/components/shell/Topbar";
 import { usePersistedBoolean } from "@/hooks/usePersistedBoolean";
 import { useStoredUser } from "@/hooks/useStoredUser";
+import { STORAGE_KEYS } from "@/lib/constants";
 import {
   DashboardDataProvider,
   useDashboardActivity,
@@ -24,7 +25,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 function ShellFrame({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = usePersistedBoolean(
-    "ng_sidebar_collapsed",
+    STORAGE_KEYS.sidebarCollapsed,
     false,
   );
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -47,22 +48,19 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen w-full">
-      <Sidebar
-        collapsed={collapsed}
-        onToggle={() => setCollapsed(!collapsed)}
-      />
+      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <MobileNavDrawer
         open={mobileOpen}
         onClose={closeMobile}
         pathname={pathname}
       />
       <div className="flex min-w-0 flex-1 flex-col">
-        <Topbar onOpenNav={() => setMobileOpen(true)} />
-        <DemoBanner />
-        <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 pb-14 pt-6 sm:px-6 lg:px-8">
+        <Topbar />
+        <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 pb-24 pt-5 sm:px-6 md:pb-12 lg:px-8">
           {children}
         </main>
       </div>
+      <BottomNav onOpenMore={() => setMobileOpen(true)} />
     </div>
   );
 }

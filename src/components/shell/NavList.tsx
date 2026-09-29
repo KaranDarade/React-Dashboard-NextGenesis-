@@ -18,7 +18,7 @@ export function NavList({
       {NAV_SECTIONS.map((section) => (
         <div key={section.title}>
           {!collapsed ? (
-            <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-500/90">
+            <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-fg-4">
               {section.title}
             </p>
           ) : null}
@@ -32,29 +32,28 @@ export function NavList({
                     href={item.href}
                     onClick={onNavigate}
                     title={collapsed ? item.label : undefined}
+                    aria-current={active ? "page" : undefined}
                     className={cn(
-                      "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                      "focus-brand group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200",
                       collapsed && "justify-center px-0",
                       active
-                        ? "bg-white/75 text-ink-900 ring-accent"
-                        : "text-ink-700 hover:translate-x-0.5 hover:bg-white/50 hover:text-ink-900",
+                        ? "bg-brand/10 font-medium text-fg ring-1 ring-brand/25"
+                        : "font-normal text-fg-2 hover:bg-white/[0.04] hover:text-fg",
                     )}
                   >
                     {active ? (
-                      <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-gradient-to-b from-indigo-500 to-cyan-400" />
+                      <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-brand" />
                     ) : null}
                     <Icon
                       className={cn(
-                        "h-5 w-5 shrink-0 transition",
-                        active
-                          ? "text-indigo-600"
-                          : "text-ink-500 group-hover:text-ink-700",
+                        "h-[18px] w-[18px] shrink-0 transition",
+                        active ? "text-brand" : "text-fg-3 group-hover:text-fg-2",
                       )}
                     />
                     {!collapsed ? (
                       <span className="truncate">{item.label}</span>
                     ) : (
-                      <span className="pointer-events-none absolute left-full top-1/2 z-30 ml-3 -translate-y-1/2 whitespace-nowrap rounded-lg bg-ink-950/90 px-2.5 py-1 text-xs font-medium text-white opacity-0 shadow-lg transition group-hover:opacity-100">
+                      <span className="pointer-events-none absolute left-full top-1/2 z-30 ml-3 -translate-y-1/2 whitespace-nowrap rounded-lg border border-line bg-canvas-soft px-2.5 py-1 text-xs font-medium text-fg opacity-0 shadow-xl transition group-hover:opacity-100">
                         {item.label}
                       </span>
                     )}
