@@ -1,13 +1,3 @@
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-});
-
-export function formatCurrency(value: number): string {
-  if (!Number.isFinite(value)) return "$0.00";
-  return currencyFormatter.format(value);
-}
-
 /**
  * Demo display currency. DummyJSON prices are USD; the storefront shows INR at
  * a fixed demo rate so the catalogue reads like a real store. These are
@@ -67,15 +57,6 @@ export function cn(
   return classes.filter(Boolean).join(" ");
 }
 
-export function formatCompactCurrency(value: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(Number.isFinite(value) ? value : 0);
-}
-
 export function formatCompactNumber(value: number): string {
   return new Intl.NumberFormat("en-US", {
     notation: "compact",
@@ -83,6 +64,4 @@ export function formatCompactNumber(value: number): string {
   }).format(Number.isFinite(value) ? value : 0);
 }
 
-export function formatPercent(value: number, digits = 0): string {
-  return `${(Number.isFinite(value) ? value : 0).toFixed(digits)}%`;
-}
+

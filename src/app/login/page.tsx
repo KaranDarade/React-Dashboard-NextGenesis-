@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { StoreFlowMark } from "@/components/shell/icons";
 import { login } from "@/lib/api/auth";
 import { setSession } from "@/lib/auth";
@@ -19,10 +19,12 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const inFlight = useRef(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (submitting) return;
+    // Ref guard (not just state) so rapid double submits cannot fire twice.
+    if (inFlight.current) return;
 
     setError(null);
     if (!username.trim() || !password) {
@@ -30,6 +32,7 @@ export default function LoginPage() {
       return;
     }
 
+    inFlight.current = true;
     setSubmitting(true);
     try {
       const data = await login(username.trim(), password);
@@ -42,6 +45,7 @@ export default function LoginPage() {
           : "Login failed. Please try again.",
       );
       setSubmitting(false);
+      inFlight.current = false;
     }
   };
 

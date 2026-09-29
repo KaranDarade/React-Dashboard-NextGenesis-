@@ -28,16 +28,6 @@ export function setSession(token: string, user: AuthUser): void {
   }
 }
 
-export function getStoredUser(): AuthUser | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = window.localStorage.getItem(USER_STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as AuthUser) : null;
-  } catch {
-    return null;
-  }
-}
-
 export function clearSession(): void {
   if (typeof document === "undefined") return;
   document.cookie = `${AUTH_COOKIE}=; path=/; max-age=0; samesite=lax`;
@@ -46,8 +36,4 @@ export function clearSession(): void {
   } catch {
     /* ignore */
   }
-}
-
-export function isAuthenticated(): boolean {
-  return Boolean(getToken());
 }

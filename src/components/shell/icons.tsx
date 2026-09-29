@@ -127,15 +127,6 @@ export function RefreshIcon(props: IconProps) {
   );
 }
 
-export function SparklesIcon(props: IconProps) {
-  return (
-    <Base {...props}>
-      <path d="M12 3.5 13.6 8 18 9.6 13.6 11.2 12 15.7 10.4 11.2 6 9.6 10.4 8 12 3.5Z" />
-      <path d="m18.5 15.5.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2Z" />
-    </Base>
-  );
-}
-
 export function ActivityIcon(props: IconProps) {
   return (
     <Base {...props}>
@@ -184,44 +175,6 @@ export function LayersIcon(props: IconProps) {
       <path d="m12 4 8 4-8 4-8-4 8-4Z" />
       <path d="m4 12 8 4 8-4" />
       <path d="m4 16 8 4 8-4" />
-    </Base>
-  );
-}
-
-export function ServerIcon(props: IconProps) {
-  return (
-    <Base {...props}>
-      <ellipse cx="12" cy="6" rx="7" ry="3" />
-      <path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6" />
-      <path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3" />
-    </Base>
-  );
-}
-
-export function GlobeIcon(props: IconProps) {
-  return (
-    <Base {...props}>
-      <circle cx="12" cy="12" r="8" />
-      <path d="M4 12h16" />
-      <path d="M12 4c2.5 2.6 2.5 13.4 0 16-2.5-2.6-2.5-13.4 0-16Z" />
-    </Base>
-  );
-}
-
-export function ClockIcon(props: IconProps) {
-  return (
-    <Base {...props}>
-      <circle cx="12" cy="12" r="8" />
-      <path d="M12 8v4.2l3 1.8" />
-    </Base>
-  );
-}
-
-export function TrendingUpIcon(props: IconProps) {
-  return (
-    <Base {...props}>
-      <path d="m4 16 5-5 3 3 7-7" />
-      <path d="M15 7h5v5" />
     </Base>
   );
 }
@@ -338,14 +291,6 @@ export function RowsIcon(props: IconProps) {
   return (
     <Base {...props}>
       <path d="M4 7h16M4 12h16M4 17h16" />
-    </Base>
-  );
-}
-
-export function SlidersIcon(props: IconProps) {
-  return (
-    <Base {...props}>
-      <path d="M4 6h16M7 12h10M10 18h4" />
     </Base>
   );
 }

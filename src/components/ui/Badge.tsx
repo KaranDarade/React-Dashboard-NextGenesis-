@@ -31,9 +31,3 @@ export function Badge({
     </span>
   );
 }
-
-export function stockTone(stock: number): Tone {
-  if (stock <= 0) return "danger";
-  if (stock < 20) return "warning";
-  return "success";
-}
